@@ -1,8 +1,11 @@
 import torch
+from torch._C import device
 import torch.nn as nn
 import torch.nn.functional as F
 from torch.nn import init
 from torchsummary import summary
+import os
+os.environ["CUDA_VISIBLE_DEVICES"] = "1"
 
 def init_weights(net, init_type='normal', gain=0.02):
     def init_func(m):
@@ -53,5 +56,7 @@ class ESPCN(nn.Module):
         return x
 
 if __name__ =="__main__":
+    device = torch.device('cuda:0')
     net = ESPCN(n_colors=3, scale=2)
-    print(summary(net, (3, 240, 360)))
+    net.to(device)
+    print(summary(net, (3, 240, 360),device='cuda'))
