@@ -26,6 +26,17 @@ def lossShow_epoch(title, xlabel, ylabel, color, curve_label, savepath, loss_arr
     plt.title(title)
     plt.savefig(savepath)
 
+def lossShow2(title, xlabel, ylabel, color1, color2, curve_label1, curve_label2, savepath, train_loss_arr, valid_loss_arr):
+    n = (np.arange(len(train_loss_arr)) + 1) * 10
+    plt.figure()
+    plt.plot(n,train_loss_arr, color1, label=curve_label1)
+    plt.plot(n,valid_loss_arr, color2, label=curve_label2)
+    plt.legend()
+    plt.xlabel(xlabel)
+    plt.ylabel(ylabel)
+    plt.title(title)
+    plt.savefig(savepath)
+
 def pictureProcess(picture_tensor):
     picture_array = picture_tensor.cpu().detach().numpy()
     picture_array = picture_array.transpose((0,2,3,1))
@@ -43,8 +54,31 @@ def calc_psnr(img1, img2):
     PIXEL_MAX = 1
     return 20 * math.log10(PIXEL_MAX / math.sqrt(mse))
 
+def psnr_in_valid_dateset(net, datasetLoader, device):
+    total_psnr = 0.0
+    daset_len = 0
+    for i_batch, data_batch in enumerate(datasetLoader):
+        # 数据
+        inputs = data_batch[0]
+        inputs = inputs.to(device)
+        labels = data_batch[1]
+        labels = labels.to(device)
+        outputs = net(inputs)
+        # 累加psnr
+        # inputs_im = pictureProcess(inputs)
+        labels_im = pictureProcess(labels)
+        outputs_im = pictureProcess(outputs)
+        psnr = calc_psnr(labels_im[0],outputs_im[0])
+        total_psnr += psnr
+        daset_len += 1
+        print(i_batch)
+    return total_psnr/daset_len
+    
+
 if __name__ == "__main__":
     lossShow("learning curve", "n", "loss value", "b", "train_loss", 
-                "result/trainLoss_n.png", np.load("trained_model/train_loss_arr.npy"))
+                "result/trainLoss_n.png", np.load("trained_model/train_loss_arr_01.npy"))
     lossShow_epoch("learning curve", "epoch", "loss value", "b", "train_loss", 
-                "result/trainLoss_epoch.png", np.load("trained_model/train_loss_arr.npy"))
+                "result/trainLoss_epoch.png", np.load("trained_model/train_loss_arr_01.npy"))
+    lossShow2("learning curve", "n", "loss value", "b", "y", "train_loss", "valid_loss",
+                "result/Loss_n.png", np.load("trained_model/train_loss_arr_01.npy"), np.load("trained_model/valid_loss_arr_01.npy"))

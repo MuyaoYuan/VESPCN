@@ -73,6 +73,9 @@ target/
 *.jpg
 *.jpeg
 
+# dataset
+*.zip
+
 # Floydhub
 .DS_Store
 .floydexpt

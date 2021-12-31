@@ -51,10 +51,11 @@ if __name__ =="__main__":
     path_in = "dataset/DIV2K_train_LR_bicubic_X2"
     path_label = "dataset/DIV2K_train_HR"
     myDataset = MyDataset(dir_input=path_in,dir_label=path_label,transform=ToTensor())
-    myDataLoader = DataLoader(myDataset, batch_size=5, shuffle=True, collate_fn =my_collate)
+    # myDataLoader = DataLoader(myDataset, batch_size=5, shuffle=True, collate_fn =my_collate)
+    myDataLoader = DataLoader(myDataset, batch_size=1, shuffle=True)
     for i_batch, items in enumerate(myDataLoader):
-        # print(i_batch, items[0].shape, items[1].shape, items[2], items[3])
-        print(i_batch, len(items), items[0][1].shape, items[0][2].shape)
+        print(i_batch, items[0].shape, items[1].shape, items[2], items[3])
+        # print(i_batch, len(items), items[0][1].shape, items[0][2].shape)
         if i_batch == 0:
             break
     # img_in, img_label, title_in, title_label = myDataset[5]

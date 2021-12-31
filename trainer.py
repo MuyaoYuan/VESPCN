@@ -14,7 +14,8 @@ os.environ["CUDA_VISIBLE_DEVICES"] = "1"
 if __name__ =="__main__":
     # 网络模型
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-    net = ESPCN(n_colors=3, scale=2)
+    # net = ESPCN(n_colors=3, scale=2)
+    net = ESPCN_modified(n_colors=3, scale=2)
     net.to(device)
 
     # 数据集
@@ -39,8 +40,9 @@ if __name__ =="__main__":
     valid_loss = 0.0
     train_loss_arr = np.array([])
     valid_loss_arr = np.array([])
-    epochs = 2
+    epochs = 50
     for epoch in range(epochs):
+        print(epoch)
         for i_batch, data_batch in enumerate(trainDataLoader):
             # 数据
             inputs = data_batch[0]
@@ -56,30 +58,31 @@ if __name__ =="__main__":
             # train_loss
             running_loss += loss.item()
             if i_batch % 10 == 9:
-                print('[%d, %5d] trainLoss:%.3f' %
-                        (epoch + 1, i_batch + 1, running_loss/10))
+                # print('[%d, %5d] trainLoss:%.3f' %
+                #         (epoch + 1, i_batch + 1, running_loss/10))
                 # train_loss
                 train_loss_arr = np.append(train_loss_arr,running_loss/10)
                 running_loss = 0.0
                 # valid_loss
-                # validDataIter = iter(validDataLoader)
-                # for i in range(10):
-                #     data_valid = validDataIter.next()
-                #     inputs_valid = data_batch[0]
-                #     inputs_valid = inputs_valid.to(device)
-                #     labels_valid = data_batch[1]
-                #     labels_valid = labels_valid.to(device)
-                #     outputs_valid = net(inputs)
-                #     loss_valid = criterion(outputs_valid, labels_valid)
-                #     valid_loss += loss_valid.item()
+                validDataIter = iter(validDataLoader)
+                for i in range(10):
+                    data_valid = validDataIter.next()
+                    inputs_valid = data_batch[0]
+                    inputs_valid = inputs_valid.to(device)
+                    labels_valid = data_batch[1]
+                    labels_valid = labels_valid.to(device)
+                    outputs_valid = net(inputs)
+                    loss_valid = criterion(outputs_valid, labels_valid)
+                    valid_loss += loss_valid.item()
                 # print('[%d, %5d] validLoss:%.3f' %
                 #         (epoch + 1, i_batch + 1, valid_loss/10))
-                # valid_loss_arr = np.append(valid_loss_arr,valid_loss/10)
-                # valid_loss = 0.0
+                valid_loss_arr = np.append(valid_loss_arr,valid_loss/10)
+                valid_loss = 0.0
 
     print("Finished Training")
-    # torch.save(net, 'trained_model/model_demo.pkl')
-    # np.save("trained_model/train_loss_arr.npy",train_loss_arr)
+    torch.save(net, 'trained_model/model_demo_01.pkl')
+    np.save("trained_model/train_loss_arr_01.npy",train_loss_arr)
+    np.save("trained_model/valid_loss_arr_01.npy",valid_loss_arr)
 
             
 
