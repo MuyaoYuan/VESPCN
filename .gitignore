@@ -75,6 +75,10 @@ target/
 
 # dataset
 *.zip
+/dataset
+
+# out
+*.out
 
 # Floydhub
 .DS_Store

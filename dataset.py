@@ -8,30 +8,40 @@ from torch.utils.data import Dataset, DataLoader
 from torchvision.transforms.transforms import ToTensor
 
 class MyDataset(Dataset):
-    def __init__(self, dir_input, dir_label, transform=ToTensor()):
-        self.dir_input = dir_input
-        self.dir_label = dir_label
+    def __init__(self, dir_input, dir_label, datasetname='DIV2K', transform=ToTensor()):
+        self.datasetname = datasetname
+        if(self.datasetname == 'DIV2K'):
+            self.dir_input = dir_input
+            self.dir_label = dir_label
 
-        file_list_input = os.listdir(dir_input)
-        file_list_input.sort(key=lambda x:int(x[:-6]))
-        self.file_list_input = file_list_input
+            file_list_input = os.listdir(dir_input)
+            file_list_input.sort(key=lambda x:int(x[:-6]))
+            self.file_list_input = file_list_input
 
-        file_list_label = os.listdir(dir_label)
-        file_list_label.sort(key=lambda x:int(x[:-4])) #倒着数第四位'.'为分界线，按照‘.'左边的数字从小到大排序
-        self.file_list_label = file_list_label
+            file_list_label = os.listdir(dir_label)
+            file_list_label.sort(key=lambda x:int(x[:-4])) #倒着数第四位'.'为分界线，按照‘.'左边的数字从小到大排序
+            self.file_list_label = file_list_label
 
-        self.transform = transform
+            self.transform = transform
+        elif(self.datasetname == 'vimeo90k'):
+            pass
 
     def __len__(self):
-        return len(self.file_list_label)
+        if(self.datasetname == 'DIV2K'):
+            return len(self.file_list_label)
+        elif(self.datasetname == 'vimeo90k'):
+            pass
 
     def __getitem__(self, index):
-        img_in = Image.open(os.path.join(self.dir_input, self.file_list_input[index]))
-        img_label = Image.open(os.path.join(self.dir_label, self.file_list_label[index]))
-        if self.transform:
-            img_in = self.transform(img_in)
-            img_label = self.transform(img_label)
-        return img_in, img_label, self.file_list_input[index], self.file_list_label[index]
+        if(self.datasetname == 'DIV2K'):
+            img_in = Image.open(os.path.join(self.dir_input, self.file_list_input[index]))
+            img_label = Image.open(os.path.join(self.dir_label, self.file_list_label[index]))
+            if self.transform:
+                img_in = self.transform(img_in)
+                img_label = self.transform(img_label)
+            return img_in, img_label, self.file_list_input[index], self.file_list_label[index]
+        elif(self.datasetname == 'vimeo90k'):
+            pass
 
 """
 在默认情况下，pytorch将图片叠在一起，成为一个N*C*H*W的张量，因此每个batch里的每个图像必须是相同的尺寸。
@@ -39,10 +49,10 @@ class MyDataset(Dataset):
 对于图像分类，collate_fn的输入大小是batch_size 大小的list, list里每个元素是一个元组，元组里第一个是图片，第二个是标签。
 对于不同大小的输入图片，我们可以使用list来储存。
 """
-def my_collate(batch):
-    data = [item[0] for item in batch]
-    target = [item[1] for item in batch]
-    return [data, target]
+# def my_collate(batch):
+#     data = [item[0] for item in batch]
+#     target = [item[1] for item in batch]
+#     return [data, target]
 
 if __name__ =="__main__":
     # print(os.getcwd()) 查看当前路径

@@ -113,8 +113,8 @@ class ESPCN_multiframe(nn.Module):
 if __name__ =="__main__":
     device = torch.device('cuda:0')
     # net = ESPCN(n_colors=3, scale=2)
-    net = ESPCN_modified(n_colors=3, scale=2)
-    # net = ESPCN_multiframe(n_colors=3, scale=2, n_sequence=3)
+    # net = ESPCN_modified(n_colors=3, scale=2)
+    net = ESPCN_multiframe(n_colors=3, scale=2, n_sequence=3)
     net.to(device)
-    print(summary(net, (3, 240, 360),device='cuda'))
-    # print(summary(net, (3*3, 240, 360),device='cuda'))
+    # print(summary(net, (3, 240, 360),device='cuda'))
+    print(summary(net, (3*3, 240, 360),device='cuda'))
