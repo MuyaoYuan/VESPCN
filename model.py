@@ -108,6 +108,11 @@ class ESPCN_multiframe(nn.Module):
         #     lr_frames_squeezed = [torch.squeeze(frame, dim = 1) for frame in x]
         #     # concatenate frames n_sequence * [N, n_colors, H, W] -> [N, n_sequence * n_colors, H, W]
         #     x = torch.cat(lr_frames_squeezed, dim = 1) 
+
+        # slow fusion
+        if len(x.shape)==5 :
+            x = x.flatten(1,2) 
+
         return self.net(x)
 
 if __name__ =="__main__":
@@ -117,4 +122,4 @@ if __name__ =="__main__":
     net = ESPCN_multiframe(n_colors=3, scale=2, n_sequence=3)
     net.to(device)
     # print(summary(net, (3, 240, 360),device='cuda'))
-    print(summary(net, (3*3, 240, 360),device='cuda'))
+    print(summary(net, (3, 3, 240, 360),device='cuda'))

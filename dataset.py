@@ -75,8 +75,10 @@ class MyDataset_Video(Dataset):
             img_label.append(img_label_item)
 
         tensor_in = torch.stack(img_in, dim=0)
-        tensor_label = torch.stack(img_label, dim=0)
-        return tensor_in, tensor_label, input_path, input_list, label_path, label_list
+        # tensor_label = torch.stack(img_label, dim=0)
+        mid_index = int((len(img_label)-1)/2)
+        tensor_label = img_label[mid_index]
+        return tensor_in, tensor_label, input_path, input_list, label_path, label_list[mid_index]
 
         
 
@@ -116,21 +118,25 @@ if __name__ =="__main__":
 
     path = "dataset/vimeo90k/vimeo_triplet"
     batch_size = 1
-    myDataset = MyDataset_Video(path = path)
+    myDataset = MyDataset_Video(path = path, train=False)
     myDataLoader = DataLoader(myDataset, batch_size=batch_size, shuffle=True)
 
     dataIter = iter(myDataLoader)
     dataItem = dataIter.next()
     
+    print(len(myDataset))
     print(dataItem[0].shape, dataItem[1].shape, dataItem[2], dataItem[3], dataItem[4], dataItem[5])
 
     inputs = framesProcess(dataItem[0])
-    labels = framesProcess(dataItem[1])
+    # labels = framesProcess(dataItem[1])
     inputs[0][0].save("input_0.png")
     inputs[0][1].save("input_1.png")
     inputs[0][2].save("input_2.png")
-    labels[0][0].save("label_0.png")
-    labels[0][1].save("label_1.png")
-    labels[0][2].save("label_2.png")
+    # labels[0][0].save("label_0.png")
+    # labels[0][1].save("label_1.png")
+    # labels[0][2].save("label_2.png")
+    labels = pictureProcess(dataItem[1])
+    labels[0].save("label.png")
 
+    
 

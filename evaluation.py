@@ -4,9 +4,9 @@ from PIL import Image
 import math
 
 def lossShow(title, xlabel, ylabel, color, curve_label, savepath, loss_arr):
-    n = (np.arange(len(loss_arr)) + 1) * 10
+    batches = (np.arange(len(loss_arr)) + 1) * 10
     plt.figure()
-    plt.plot(n,loss_arr, color, label=curve_label)
+    plt.plot(batches,loss_arr, color, label=curve_label)
     plt.legend()
     plt.xlabel(xlabel)
     plt.ylabel(ylabel)
@@ -27,10 +27,10 @@ def lossShow_epoch(title, xlabel, ylabel, color, curve_label, savepath, loss_arr
     plt.savefig(savepath)
 
 def lossShow2(title, xlabel, ylabel, color1, color2, curve_label1, curve_label2, savepath, train_loss_arr, valid_loss_arr):
-    n = (np.arange(len(train_loss_arr)) + 1) * 10
+    batches = (np.arange(len(train_loss_arr)) + 1) * 10
     plt.figure()
-    plt.plot(n,train_loss_arr, color1, label=curve_label1)
-    plt.plot(n,valid_loss_arr, color2, label=curve_label2)
+    plt.plot(batches,train_loss_arr, color1, label=curve_label1)
+    plt.plot(batches,valid_loss_arr, color2, label=curve_label2)
     plt.legend()
     plt.xlabel(xlabel)
     plt.ylabel(ylabel)
@@ -87,9 +87,9 @@ def psnr_in_valid_dateset(net, datasetLoader, device):
     
 
 if __name__ == "__main__":
-    lossShow("learning curve", "n", "loss value", "b", "train_loss", 
-                "result/trainLoss_n.png", np.load("trained_model/train_loss_arr_01.npy"))
-    lossShow_epoch("learning curve", "epoch", "loss value", "b", "train_loss", 
-                "result/trainLoss_epoch.png", np.load("trained_model/train_loss_arr_01.npy"))
-    lossShow2("learning curve", "n", "loss value", "b", "y", "train_loss", "valid_loss",
-                "result/Loss_n.png", np.load("trained_model/train_loss_arr_01.npy"), np.load("trained_model/valid_loss_arr_01.npy"))
+    lossShow("learning curve", "batches", "loss value", "b", "train_loss", 
+                "result/loss/trainLoss_batches.png", np.load("trained_model/ESPCN_multiframe/train_loss_arr.npy"))
+    # lossShow_epoch("learning curve", "epoch", "loss value", "b", "train_loss", 
+    #             "result/loss/trainLoss_epoch.png", np.load("trained_model/ESPCN_multiframe/train_loss_arr.npy"))
+    lossShow2("learning curve", "batches", "loss value", "b", "y", "train_loss", "valid_loss",
+                "result/loss/Loss_batches.png", np.load("trained_model/ESPCN_multiframe/train_loss_arr.npy"), np.load("trained_model/ESPCN_multiframe/valid_loss_arr.npy"))

@@ -15,10 +15,13 @@ if __name__ =="__main__":
     # 网络模型
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
     # net = ESPCN(n_colors=3, scale=2)
-    net = ESPCN_modified(n_colors=3, scale=2)
+    # net = ESPCN_modified(n_colors=3, scale=2)
+    net = ESPCN_multiframe(n_colors=3, scale=2, n_sequence=3)
     net.to(device)
 
     # 数据集
+    """
+    # ESPCN & ESPCN_modified
     train_path_in = "dataset/DIV2K_train_LR_bicubic_X2"
     train_path_label = "dataset/DIV2K_train_HR"
     valid_path_in = "dataset/DIV2K_valid_LR_bicubic_X2"
@@ -28,6 +31,15 @@ if __name__ =="__main__":
     # myDataLoader = DataLoader(myDataset, batch_size=batch_size, shuffle=True, collate_fn =my_collate)
     trainDataLoader = DataLoader(trainDataset, batch_size=batch_size, shuffle=True)
     validDataset = MyDataset(dir_input=valid_path_in,dir_label=valid_path_label,transform=ToTensor())
+    validDataLoader = DataLoader(validDataset, batch_size=batch_size, shuffle=True)
+    """
+
+    # ESPCN_multiframe
+    path = "dataset/vimeo90k/vimeo_triplet"
+    batch_size = 10
+    trainDataset = MyDataset_Video(path = path)
+    trainDataLoader = DataLoader(trainDataset, batch_size=batch_size, shuffle=True)
+    validDataset = MyDataset_Video(path = path, train=False)
     validDataLoader = DataLoader(validDataset, batch_size=batch_size, shuffle=True)
 
     criterion = nn.MSELoss()
@@ -40,7 +52,7 @@ if __name__ =="__main__":
     valid_loss = 0.0
     train_loss_arr = np.array([])
     valid_loss_arr = np.array([])
-    epochs = 50
+    epochs = 20
     for epoch in range(epochs):
         print(epoch)
         for i_batch, data_batch in enumerate(trainDataLoader):
@@ -58,14 +70,17 @@ if __name__ =="__main__":
             # train_loss
             running_loss += loss.item()
             if i_batch % 10 == 9:
+
+                # train_loss
                 # print('[%d, %5d] trainLoss:%.3f' %
                 #         (epoch + 1, i_batch + 1, running_loss/10))
-                # train_loss
                 train_loss_arr = np.append(train_loss_arr,running_loss/10)
                 running_loss = 0.0
+
                 # valid_loss
                 validDataIter = iter(validDataLoader)
-                for i in range(10):
+                valid_batches = 5
+                for i in range(valid_batches):
                     data_valid = validDataIter.next()
                     inputs_valid = data_batch[0]
                     inputs_valid = inputs_valid.to(device)
@@ -75,14 +90,16 @@ if __name__ =="__main__":
                     loss_valid = criterion(outputs_valid, labels_valid)
                     valid_loss += loss_valid.item()
                 # print('[%d, %5d] validLoss:%.3f' %
-                #         (epoch + 1, i_batch + 1, valid_loss/10))
-                valid_loss_arr = np.append(valid_loss_arr,valid_loss/10)
+                #         (epoch + 1, i_batch + 1, valid_loss/valid_batches))
+                valid_loss_arr = np.append(valid_loss_arr,valid_loss/valid_batches)
                 valid_loss = 0.0
+            # if i_batch == 99:
+            #     break
 
     print("Finished Training")
-    torch.save(net, 'trained_model/model_demo_01.pkl')
-    np.save("trained_model/train_loss_arr_01.npy",train_loss_arr)
-    np.save("trained_model/valid_loss_arr_01.npy",valid_loss_arr)
+    torch.save(net, 'trained_model/ESPCN_multiframe/model_demo.pkl')
+    np.save("trained_model/ESPCN_multiframe/train_loss_arr.npy",train_loss_arr)
+    np.save("trained_model/ESPCN_multiframe/valid_loss_arr.npy",valid_loss_arr)
 
             
 
