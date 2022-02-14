@@ -36,7 +36,7 @@ if __name__ =="__main__":
 
     
 
-    # print(psnr_in_valid_dateset(net, myDataLoader, device))
+    print(psnr_in_valid_dateset(net, myDataLoader, device))
     
     # outputs display
     dataIter = iter(myDataLoader)
