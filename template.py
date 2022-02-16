@@ -21,7 +21,7 @@ def set_template(args):
         args.valid_path_label = "dataset/DIV2K_valid_HR"
         args.epochs = 100
         args.batch_size = 1
-        args.lr = 1e-5
+        args.lr = 1e-4
         args.n_colors = 3
         args.scale = 2
     
@@ -29,7 +29,7 @@ def set_template(args):
         args.model = 'ESPCN_multiframe'
         args.dataset_name = 'vimeo90k'
         args.dataset_path = "dataset/vimeo90k/vimeo_triplet"
-        args.epochs = 20
+        args.epochs = 30
         args.batch_size = 10
         args.lr = 1e-4
         args.n_colors = 3

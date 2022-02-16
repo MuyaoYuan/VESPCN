@@ -37,7 +37,7 @@ class Trainer:
         else:
             print('Please Enter Appropriate Model!!!')
 
-        
+        self.lr = args.lr
         self.optimizer = optim.Adam(self.model.parameters(), lr=args.lr)
         self.criterion = nn.MSELoss()
 
@@ -72,6 +72,10 @@ class Trainer:
 
         for epoch in range(self.epochs):
             print(epoch)
+            if(epoch %10 == 9 and self.lr > 1e-6):
+                self.lr = self.lr/10
+                self.optimizer = optim.Adam(self.model.parameters(), lr=self.lr)
+                print('Changing Learing Rate To: ' + str(self.lr))
             for i_batch, data_batch in enumerate(self.trainDataLoader):
                 # 数据
                 inputs = data_batch[0]
@@ -112,10 +116,12 @@ class Trainer:
                     valid_loss_arr = np.append(valid_loss_arr,valid_loss)
                     valid_loss = 0.0
                 if self.test == True:
-                    if i_batch == 199:
+                    if i_batch >= 9:
                         break
             if self.test == True:
-                break
+                if epoch >= 21:
+                    break
+                # break
 
         print("Finished Training")
         if self.test == True:
