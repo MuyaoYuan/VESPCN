@@ -19,9 +19,9 @@ def set_template(args):
         args.train_path_label = "dataset/DIV2K_train_HR"
         args.valid_path_in = "dataset/DIV2K_valid_LR_bicubic_X2"
         args.valid_path_label = "dataset/DIV2K_valid_HR"
-        args.epochs = 50
+        args.epochs = 100
         args.batch_size = 1
-        args.lr = 1e-4
+        args.lr = 1e-5
         args.n_colors = 3
         args.scale = 2
     
@@ -37,4 +37,4 @@ def set_template(args):
         args.n_sequence = 3
         
     else:
-        pass
+        print('Please Enter Appropriate Template!!!')

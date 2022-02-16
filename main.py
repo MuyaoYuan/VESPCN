@@ -4,7 +4,7 @@ from reloader import Reloader
 from option import args
 
 import os
-os.environ["CUDA_VISIBLE_DEVICES"] = "1"
+os.environ["CUDA_VISIBLE_DEVICES"] = "7"
 
 if args.task == 'preparation':
     print("Selected task: preparation")

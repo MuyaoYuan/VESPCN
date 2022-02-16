@@ -27,25 +27,34 @@ class vimeo90k(Dataset):
         input_path = os.path.join(self.path, "sequences_LR_bicubic_X2", self.datasetList[index])
         label_path = os.path.join(self.path, "sequences", self.datasetList[index])
 
-        input_list = os.listdir(input_path)
-        input_list.sort(key=lambda x:int(x[-5:-4])) #倒着数第四位'.'为分界线，按照‘.'左边的数字从小到大排序
-        label_list = os.listdir(label_path)
-        label_list.sort(key=lambda x:int(x[-5:-4])) #倒着数第四位'.'为分界线，按照‘.'左边的数字从小到大排序
+        # input_list = os.listdir(input_path)
+        # input_list.sort(key=lambda x:int(x[-5:-4])) #倒着数第四位'.'为分界线，按照‘.'左边的数字从小到大排序
+        input_list = ['im1.png', 'im2.png', 'im3.png']
+        # label_list = os.listdir(label_path)
+        # label_list.sort(key=lambda x:int(x[-5:-4])) #倒着数第四位'.'为分界线，按照‘.'左边的数字从小到大排序
+        label_list = 'im2.png'
 
         img_in = []
-        img_label = []
+        # img_label = []
+        
 
         for i in range(len(input_list)):
             img_in_item = Image.open(os.path.join(input_path, input_list[i]))
-            img_label_item = Image.open(os.path.join(label_path, label_list[i]))
+            # img_label_item = Image.open(os.path.join(label_path, label_list[i]))
             if self.transform:
                 img_in_item = self.transform(img_in_item)
-                img_label_item = self.transform(img_label_item)
+                # img_label_item = self.transform(img_label_item)
             img_in.append(img_in_item)
-            img_label.append(img_label_item)
+            # img_label.append(img_label_item)
 
         tensor_in = torch.stack(img_in, dim=0)
         # tensor_label = torch.stack(img_label, dim=0)
-        mid_index = int((len(img_label)-1)/2)
-        tensor_label = img_label[mid_index]
-        return tensor_in, tensor_label, input_path, input_list, label_path, label_list[mid_index]
+        # mid_index = int((len(img_label)-1)/2)
+        # tensor_label = img_label[mid_index]
+
+        img_label = Image.open(os.path.join(label_path, label_list))
+        if self.transform:
+                tensor_label = self.transform(img_label)
+
+        # return tensor_in, tensor_label, input_path, input_list, label_path, label_list[mid_index]
+        return tensor_in, tensor_label, input_path, input_list, label_path, label_list

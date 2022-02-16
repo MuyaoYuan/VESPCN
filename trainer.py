@@ -112,7 +112,7 @@ class Trainer:
                     valid_loss_arr = np.append(valid_loss_arr,valid_loss)
                     valid_loss = 0.0
                 if self.test == True:
-                    if i_batch == 99:
+                    if i_batch == 199:
                         break
             if self.test == True:
                 break

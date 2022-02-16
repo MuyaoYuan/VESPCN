@@ -74,18 +74,30 @@ class Reloader:
             inputs_im = pictureProcess(inputs)
             labels_im = pictureProcess(labels)
             outputs_im = pictureProcess(outputs)
-            inputs_im[0].save('result/' + self.model_name + '/demo/input.png')
-            labels_im[0].save('result/' + self.model_name + '/demo/label.png')
-            outputs_im[0].save('result/' + self.model_name + '/demo/output.png')
+            if self.type == 'pre':
+                inputs_im[0].save('result/' + self.model_name + '/demo/input_demo.png')
+                labels_im[0].save('result/' + self.model_name + '/demo/label_demo.png')
+                outputs_im[0].save('result/' + self.model_name + '/demo/output_demo.png')
+            elif self.type == 'trained':
+                inputs_im[0].save('result/' + self.model_name + '/demo/input.png')
+                labels_im[0].save('result/' + self.model_name + '/demo/label.png')
+                outputs_im[0].save('result/' + self.model_name + '/demo/output.png')
         if(self.dataset_name == 'vimeo90k'):
             inputs_im = framesProcess(inputs)
             labels_im = pictureProcess(labels)
             outputs_im = pictureProcess(outputs)
-            inputs_im[0][0].save('result/' + self.model_name + '/demo/input_0.png')
-            inputs_im[0][1].save('result/' + self.model_name + '/demo/input_1.png')
-            inputs_im[0][2].save('result/' + self.model_name + '/demo/input_2.png')
-            labels_im[0].save('result/' + self.model_name + '/demo/label.png')
-            outputs_im[0].save('result/' + self.model_name + '/demo/output.png')
+            if self.type == 'pre':
+                inputs_im[0][0].save('result/' + self.model_name + '/demo/input_0_demo.png')
+                inputs_im[0][1].save('result/' + self.model_name + '/demo/input_1_demo.png')
+                inputs_im[0][2].save('result/' + self.model_name + '/demo/input_2_demo.png')
+                labels_im[0].save('result/' + self.model_name + '/demo/label_demo.png')
+                outputs_im[0].save('result/' + self.model_name + '/demo/output_demo.png')
+            elif(self.type == 'trained'):
+                inputs_im[0][0].save('result/' + self.model_name + '/demo/input_0.png')
+                inputs_im[0][1].save('result/' + self.model_name + '/demo/input_1.png')
+                inputs_im[0][2].save('result/' + self.model_name + '/demo/input_2.png')
+                labels_im[0].save('result/' + self.model_name + '/demo/label.png')
+                outputs_im[0].save('result/' + self.model_name + '/demo/output.png')
         print('psnr of demo: ' + str(calc_psnr(labels_im[0],outputs_im[0])))
     
     def loss_display(self):

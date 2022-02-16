@@ -45,6 +45,6 @@ def dataset_test(dataset_name):
         pass
 
 if __name__ =="__main__":
-    dataset_test('DIV2K')
-    print('\n')
+    # dataset_test('DIV2K')
+    # print('\n')
     dataset_test('vimeo90k')
