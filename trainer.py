@@ -126,11 +126,11 @@ class Trainer:
 
         print("Finished Training")
         if self.test == True:
-            torch.save(self.model, 'trained_model/' + self.model_name + '/'+self.model_name + '_demo.pkl')
+            torch.save(self.model.state_dict(), 'trained_model/' + self.model_name + '/'+self.model_name + '_demo.pkl')
             np.save('trained_model/' + self.model_name + '/' + self.model_name +"_train_loss_arr_demo.npy",train_loss_arr)
             np.save('trained_model/' + self.model_name + '/' + self.model_name + "_valid_loss_arr_demo.npy",valid_loss_arr)
         else:
-            torch.save(self.model, 'trained_model/' + self.model_name + '/' + self.model_name + '.pkl')
+            torch.save(self.model.state_dict(), 'trained_model/' + self.model_name + '/' + self.model_name + '.pkl')
             np.save('trained_model/' + self.model_name + '/' + self.model_name +"_train_loss_arr.npy",train_loss_arr)
             np.save('trained_model/' + self.model_name + '/' + self.model_name + "_valid_loss_arr.npy",valid_loss_arr)
         

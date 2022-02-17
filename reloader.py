@@ -5,6 +5,11 @@ from PIL import Image
 from torchvision.transforms.transforms import ToTensor
 from evaluation import *
 
+# import model
+from model.ESPCN import ESPCN
+from model.ESPCN_modified import ESPCN_modified
+from model.ESPCN_multiframe import ESPCN_multiframe
+
 # import dataset
 from datasetProcess.DIV2K import DIV2K
 from datasetProcess.vimeo90k import vimeo90k
@@ -13,8 +18,17 @@ class Reloader:
     def __init__(self, args, type):
         self.args = args
         self.device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-        self.model_name = args.model
         self.type = type
+        # select model
+        self.model_name = args.model
+        if(self.model_name == 'ESPCN'):
+            self.model = ESPCN(n_colors=args.n_colors, scale=args.scale).to(self.device)
+        elif(self.model_name == 'ESPCN_modified'):
+            self.model = ESPCN_modified(n_colors=args.n_colors, scale=args.scale).to(self.device)
+        elif(self.model_name == 'ESPCN_multiframe'):
+            self.model = ESPCN_multiframe(n_colors=args.n_colors, scale=args.scale, n_sequence=args.n_sequence).to(self.device)
+        else:
+            print('Please Enter Appropriate Model!!!')
         # save path
         '''
         保存时代码
@@ -36,7 +50,7 @@ class Reloader:
 
         # model reload
         # print(self.save_path)
-        self.model = torch.load(self.save_path).to(self.device)
+        self.model.load_state_dict(torch.load(self.save_path))
         # Dateset select
         self.dataset_name = args.dataset_name
         if(args.dataset_name == 'DIV2K'):
