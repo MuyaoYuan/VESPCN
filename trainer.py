@@ -49,16 +49,17 @@ class Trainer:
             self.valid_path_label = args.valid_path_label
             self.batch_size = args.batch_size 
             self.trainDataset = DIV2K(dir_input=self.train_path_in,dir_label=self.train_path_label,transform=ToTensor())
-            self.trainDataLoader = DataLoader(self.trainDataset, batch_size=self.batch_size, shuffle=True)
+            self.trainDataLoader = DataLoader(self.trainDataset, batch_size=self.batch_size, shuffle=True,num_workers=args.num_workers,pin_memory=args.pin_memory)
             self.validDataset = DIV2K(dir_input=self.valid_path_in,dir_label=self.valid_path_label,transform=ToTensor())
-            self.validDataLoader = DataLoader(self.validDataset, batch_size=self.batch_size, shuffle=True)
+            self.validDataLoader = DataLoader(self.validDataset, batch_size=self.batch_size, shuffle=True,num_workers=args.num_workers,pin_memory=args.pin_memory)
         elif(args.dataset_name == 'vimeo90k'):
             self.dataset_path = args.dataset_path
             self.batch_size = args.batch_size
+            # print(args.num_workers,args.pin_memory)
             self.trainDataset = vimeo90k(path = self.dataset_path)
-            self.trainDataLoader = DataLoader(self.trainDataset, batch_size=self.batch_size, shuffle=True)
+            self.trainDataLoader = DataLoader(self.trainDataset, batch_size=self.batch_size, shuffle=True,num_workers=args.num_workers,pin_memory=args.pin_memory)
             self.validDataset = vimeo90k(path = self.dataset_path, train=False)
-            self.validDataLoader = DataLoader(self.validDataset, batch_size=self.batch_size, shuffle=True)
+            self.validDataLoader = DataLoader(self.validDataset, batch_size=self.batch_size, shuffle=True,num_workers=args.num_workers,pin_memory=args.pin_memory)
         else:
             print('Please Enter Appropriate Dataset!!!')
 
@@ -72,7 +73,7 @@ class Trainer:
 
         for epoch in range(self.epochs):
             print(epoch)
-            if(epoch %10 == 9 and self.lr > 1e-6):
+            if(epoch %10 == 9 and self.lr - 1e-6 > 1e-6): 
                 self.lr = self.lr/10
                 self.optimizer = optim.Adam(self.model.parameters(), lr=self.lr)
                 print('Changing Learing Rate To: ' + str(self.lr))
@@ -116,7 +117,7 @@ class Trainer:
                     valid_loss_arr = np.append(valid_loss_arr,valid_loss)
                     valid_loss = 0.0
                 if self.test == True:
-                    if i_batch >= 9:
+                    if i_batch >= 19:
                         break
             if self.test == True:
                 if epoch >= 21:

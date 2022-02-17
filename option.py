@@ -8,5 +8,10 @@ parser.add_argument('--template', default='.',
 parser.add_argument('--task', default='.',
                     help='preparation, train, reload-pre or reload-trained')
 
+parser.add_argument('--num_workers', default=8,
+                    help='the num of workers')
+parser.add_argument('--pin_memory', default=True,
+                    help='pin_memory')
+
 args = parser.parse_args()
 template.set_template(args)

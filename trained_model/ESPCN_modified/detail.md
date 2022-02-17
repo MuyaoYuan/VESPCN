@@ -6,4 +6,4 @@
 * optimizer = optim.Adam(net.parameters(), lr=1e-5)
 * epochs = 100
 * batch_size = 1
-* psnr_in_valid_dataset = 26.56372080644276
+* psnr_in_valid_dataset = ?

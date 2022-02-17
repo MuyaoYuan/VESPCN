@@ -112,6 +112,7 @@ class Reloader:
                         np.load('trained_model/' + self.model_name + '/' + self.model_name +"_train_loss_arr_demo.npy"), 
                         np.load('trained_model/' + self.model_name + '/' + self.model_name +"_valid_loss_arr_demo.npy"))
         elif(self.type == 'trained'):
+            # print('lossShow')
             lossShow("learning curve", "batches", "loss value", "b", "train_loss", 
                     'result/' + self.model_name + '/loss/trainLoss_batches.png', 
                     np.load('trained_model/' + self.model_name + '/' + self.model_name +"_train_loss_arr.npy"))

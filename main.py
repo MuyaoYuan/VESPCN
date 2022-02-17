@@ -26,7 +26,7 @@ elif args.task == 'reload-pre':
 elif args.task == 'reload-trained':
     print("Selected task: reload-trained")
     reloader = Reloader(args, 'trained')
-    reloader.outputs_display()
+    # reloader.outputs_display()
     reloader.loss_display()
 
 else:
