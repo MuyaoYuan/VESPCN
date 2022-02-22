@@ -1,6 +1,7 @@
 import torch
 from trainer import Trainer
 from reloader import Reloader
+from implementor import Implementor
 from option import args
 
 import os
@@ -28,6 +29,11 @@ elif args.task == 'reload-trained':
     reloader = Reloader(args, 'trained')
     reloader.outputs_display()
     reloader.loss_display()
+
+elif args.task == 'implement-img':
+    print("Selected task: implement-img")
+    implementor = Implementor(args,'img')
+    implementor.img_SR('test/image_original/Amber.jpg','test/image_SR')
 
 else:
     print('Please Enter Appropriate Task Type!!!')

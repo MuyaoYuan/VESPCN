@@ -33,14 +33,14 @@ def dataset_test(dataset_name):
 
         inputs = framesProcess(dataItem[0])
         # labels = framesProcess(dataItem[1])
-        inputs[0][0].save("input_0.png")
-        inputs[0][1].save("input_1.png")
-        inputs[0][2].save("input_2.png")
-        # labels[0][0].save("label_0.png")
-        # labels[0][1].save("label_1.png")
-        # labels[0][2].save("label_2.png")
+        inputs[0][0].save("test/input_0.png")
+        inputs[0][1].save("test/input_1.png")
+        inputs[0][2].save("test/input_2.png")
+        # labels[0][0].save("test/label_0.png")
+        # labels[0][1].save("test/label_1.png")
+        # labels[0][2].save("test/label_2.png")
         labels = pictureProcess(dataItem[1])
-        labels[0].save("label.png")
+        labels[0].save("test/label.png")
     else:
         pass
 

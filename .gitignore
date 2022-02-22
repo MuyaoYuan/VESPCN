@@ -73,6 +73,9 @@ target/
 *.jpg
 *.jpeg
 
+# Video
+*.mp4
+
 # dataset
 *.zip
 /dataset
