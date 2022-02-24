@@ -32,8 +32,13 @@ elif args.task == 'reload-trained':
 
 elif args.task == 'implement-img':
     print("Selected task: implement-img")
-    implementor = Implementor(args,'img')
+    implementor = Implementor(args)
     implementor.img_SR('test/image_original/Amber.jpg','test/image_SR')
+
+elif args.task == 'implement-video':
+    print("Selected task: implement-video")
+    implementor = Implementor(args)
+    implementor.video_SR('test/video_original/kanna.mp4','test/video_SR')
 
 else:
     print('Please Enter Appropriate Task Type!!!')

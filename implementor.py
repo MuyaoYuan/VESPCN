@@ -11,9 +11,8 @@ from evaluation import *
 
 
 class Implementor:
-    def __init__(self, args, type):
+    def __init__(self, args):
         self.args = args
-        self.type = type
         self.device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
         # select model
         self.model_name = args.model
@@ -40,5 +39,40 @@ class Implementor:
         img_output = self.model(img_in)
         img_SR = pictureProcess(img_output)
         img_SR[0].save(os.path.join(save_path, self.model_name + '_SR.png'))
+
+    def video_SR(self, video_path, save_path):
+        cap = cv.VideoCapture(video_path)
+        frame_width = int(cap.get(3)) * self.args.scale
+        frame_height = int(cap.get(4)) * self.args.scale
+        fps = 60
+        out = cv.VideoWriter(os.path.join(save_path, self.model_name + '_SR.avi'), cv.VideoWriter_fourcc('M','J','P','G'), fps, (frame_width, frame_height))
+        while(cap.isOpened()):
+            # 获取每一帧图像
+            ret, frame = cap.read()
+            # 如果获取成功显示图像
+            if ret == True:
+                # 超分
+                '''
+                    数组经过行上的切片操作, 会改变数组的连续性。
+                    方法一: 复制一份img保存到新的地址
+                    img = img[:, :, ::-1]改为img = img[:, :, ::-1].copy()
+                    方法二: 将原有的img改为连续的
+                    img = img[:, :, ::-1]下一行插入img = np.ascontiguousarray(img)
+                    方法三: 直接将原来的numpy.ndarray转为PIL Image格式
+                    img = img[:, :, ::-1]下一行插入img = Image.fromarray(np.uint8(img))
+                '''
+                frame = frame[:,:,::-1].copy() # 将BGR通道调整为RGB通道 加.copy()解决数组连续性问题
+                frame_in = self.transform(frame)
+                frame_in = frame_in.to(self.device)
+                frame_in = frame_in.view(1, *frame_in.size())
+                frame_out = self.model(frame_in)
+                frame_cv = np.uint8(frame_out.cpu().detach().numpy()*255).transpose(0,2,3,1)
+                frame_cv = frame_cv[0][:,:,::-1]
+                # 将每一帧写入到输出文件中
+                out.write(frame_cv)
+            else:
+                break
+        cap.release()
+        out.release()
 
 

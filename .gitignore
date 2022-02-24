@@ -75,6 +75,7 @@ target/
 
 # Video
 *.mp4
+*.avi
 
 # dataset
 *.zip
