@@ -38,7 +38,7 @@ elif args.task == 'implement-img':
 elif args.task == 'implement-video':
     print("Selected task: implement-video")
     implementor = Implementor(args)
-    implementor.video_SR('test/video_original/kanna.mp4','test/video_SR')
+    implementor.video_SR('test/video_original/kanna10.mp4','test/video_SR')
 
 else:
     print('Please Enter Appropriate Task Type!!!')

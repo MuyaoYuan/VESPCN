@@ -45,7 +45,7 @@ class Implementor:
         frame_width = int(cap.get(3)) * self.args.scale
         frame_height = int(cap.get(4)) * self.args.scale
         fps = 60
-        out = cv.VideoWriter(os.path.join(save_path, self.model_name + '_SR.avi'), cv.VideoWriter_fourcc('M','J','P','G'), fps, (frame_width, frame_height))
+        out = cv.VideoWriter(os.path.join(save_path, self.model_name + '_SR.flv'), cv.VideoWriter_fourcc(*'FLV1'), fps, (frame_width, frame_height))
         while(cap.isOpened()):
             # 获取每一帧图像
             ret, frame = cap.read()

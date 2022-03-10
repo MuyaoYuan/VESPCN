@@ -3,9 +3,9 @@ import template
 
 parser = argparse.ArgumentParser(description='SR')
 
-parser.add_argument('--template', default='.',
+parser.add_argument('-tp','--template', default='.',
                     help='You can set various templates in template.py')
-parser.add_argument('--task', default='.',
+parser.add_argument('-t','--task', default='.',
                     help='preparation, train, reload-pre or reload-trained')
 
 parser.add_argument('--num_workers', default=8,
