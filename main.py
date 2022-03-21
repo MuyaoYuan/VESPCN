@@ -5,7 +5,7 @@ from implementor import Implementor
 from option import args
 
 import os
-os.environ["CUDA_VISIBLE_DEVICES"] = "7"
+os.environ["CUDA_VISIBLE_DEVICES"] = "1"
 
 if args.task == 'preparation':
     print("Selected task: preparation")

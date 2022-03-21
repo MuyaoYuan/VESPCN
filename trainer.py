@@ -10,6 +10,7 @@ from torchvision.transforms.transforms import ToTensor
 from model.ESPCN import ESPCN
 from model.ESPCN_modified import ESPCN_modified
 from model.ESPCN_multiframe import ESPCN_multiframe
+from model.ESPCN_multiframe2 import ESPCN_multiframe2
 
 from model.init_weight import init_weights
 
@@ -34,6 +35,8 @@ class Trainer:
             self.model = ESPCN_modified(n_colors=args.n_colors, scale=args.scale).to(self.device)
         elif(self.model_name == 'ESPCN_multiframe'):
             self.model = ESPCN_multiframe(n_colors=args.n_colors, scale=args.scale, n_sequence=args.n_sequence).to(self.device)
+        elif(self.model_name == 'ESPCN_multiframe2'):
+            self.model = ESPCN_multiframe2(n_colors=args.n_colors, scale=args.scale, n_sequence=args.n_sequence).to(self.device)
         else:
             print('Please Enter Appropriate Model!!!')
 

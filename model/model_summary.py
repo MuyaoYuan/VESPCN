@@ -1,6 +1,7 @@
 import torch
 from torchsummary import summary
 import os
+os.environ["CUDA_VISIBLE_DEVICES"] = "1"
 
 def model_summary(model_name):
     device = torch.device('cuda:0')
@@ -21,10 +22,16 @@ def model_summary(model_name):
         net = ESPCN_multiframe(n_colors=3, scale=2, n_sequence=3)
         net.to(device)
         print(summary(net, (3, 3, 240, 360),device='cuda'))
+    elif(model_name == 'ESPCN_multiframe2'):
+        from ESPCN_multiframe2 import ESPCN_multiframe2
+        net = ESPCN_multiframe2(n_colors=3, scale=2, n_sequence=3)
+        net.to(device)
+        print(summary(net, (3, 3, 240, 360),device='cuda'))
     else:
         pass
 
 if __name__ =="__main__":
     # model_summary("ESPCN")
     # model_summary("ESPCN_modified")
-    model_summary("ESPCN_multiframe")
+    # model_summary("ESPCN_multiframe")
+    model_summary("ESPCN_multiframe2")
