@@ -27,6 +27,15 @@ def model_summary(model_name):
         net = ESPCN_multiframe2(n_colors=3, scale=2, n_sequence=3)
         net.to(device)
         print(summary(net, (3, 3, 240, 360),device='cuda'))
+    elif(model_name == 'motioncompensator'):
+        from motioncompensator import MotionCompensator
+        net = MotionCompensator(n_colors=3, device=device)
+        net.to(device)
+        # print(summary(net, (3, 240, 360),device='cuda'))
+        frame1 = torch.ones(1,3,240,360).to(device)
+        frame2 = torch.ones_like(frame1).to(device)
+        frame_out = net(frame1,frame2)
+        print(frame_out[0].shape, frame_out[1].shape)
     else:
         pass
 
@@ -34,4 +43,5 @@ if __name__ =="__main__":
     # model_summary("ESPCN")
     # model_summary("ESPCN_modified")
     # model_summary("ESPCN_multiframe")
-    model_summary("ESPCN_multiframe2")
+    # model_summary("ESPCN_multiframe2")
+    model_summary("motioncompensator")
