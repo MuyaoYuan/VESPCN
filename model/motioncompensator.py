@@ -7,6 +7,8 @@ class MotionCompensator(nn.Module):
     def __init__(self, n_colors, device):
         super(MotionCompensator, self).__init__()
 
+        print("Creating Motion Compensator")
+
         self.device = device
                         
         # Coarse flow

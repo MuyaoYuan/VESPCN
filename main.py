@@ -1,5 +1,6 @@
 import torch
 from trainer import Trainer
+from trainer_mc import Trainer_MC
 from reloader import Reloader
 from implementor import Implementor
 from option import args
@@ -9,25 +10,37 @@ os.environ["CUDA_VISIBLE_DEVICES"] = "1"
 
 if args.task == 'preparation':
     print("Selected task: preparation")
-    trainer = Trainer(args=args)
+    if(args.model != 'MC'):
+        trainer = Trainer(args=args)
+    else:
+        trainer = Trainer_MC(args=args)
     trainer.train()
 
 elif args.task == 'train':
     print("Selected task: train")
-    trainer = Trainer(args=args)
+    if(args.model != 'MC'):
+        trainer = Trainer(args=args)
+    else:
+        trainer = Trainer_MC(args=args)
     trainer.train()
 
 elif args.task == 'reload-pre':
     print("Selected task: reload-pre")
     reloader = Reloader(args, 'pre')
-    reloader.outputs_display()
+    if(args.model != 'MC'):
+        reloader.outputs_display()
+    else:
+        reloader.outputs_display_MC()
     reloader.loss_display()
-
+        
 
 elif args.task == 'reload-trained':
     print("Selected task: reload-trained")
     reloader = Reloader(args, 'trained')
-    reloader.outputs_display()
+    if(args.model != 'MC'):
+        reloader.outputs_display()
+    else:
+        reloader.outputs_display_MC()
     reloader.loss_display()
 
 elif args.task == 'implement-img':

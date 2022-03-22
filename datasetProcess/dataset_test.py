@@ -21,7 +21,7 @@ def dataset_test(dataset_name):
     elif(dataset_name == 'vimeo90k'):
         from vimeo90k import vimeo90k
         path = "dataset/vimeo90k/vimeo_triplet"
-        batch_size = 1
+        batch_size = 10
         myDataset = vimeo90k(path = path, train=True)
         myDataLoader = DataLoader(myDataset, batch_size=batch_size, shuffle=True)
 
@@ -29,7 +29,17 @@ def dataset_test(dataset_name):
         dataItem = dataIter.next()
         
         print(len(myDataset))
-        print(dataItem[0].shape, dataItem[1].shape, dataItem[2], dataItem[3], dataItem[4], dataItem[5])
+        # print(dataItem[0].shape, dataItem[1].shape, dataItem[2], dataItem[3], dataItem[4], dataItem[5])
+        print(dataItem[0].shape, dataItem[1].shape)
+        print(dataItem[0][:,0].shape) # 所有前一帧
+        print(dataItem[0][:,1].shape) # 所有当前帧
+        print(dataItem[0][:,2].shape) # 所有后一帧
+        pre_frame = pictureProcess(dataItem[0][:,0])
+        current_frame = pictureProcess(dataItem[0][:,1])
+        post_frame = pictureProcess(dataItem[0][:,2])
+        pre_frame[0].save('test/pre.png')
+        current_frame[0].save('test/current.png')
+        post_frame[0].save('test/post.png')
 
         inputs = framesProcess(dataItem[0])
         # labels = framesProcess(dataItem[1])

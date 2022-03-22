@@ -46,6 +46,16 @@ def set_template(args):
         args.n_colors = 3
         args.scale = 2
         args.n_sequence = 3
+    
+    elif args.template == 'MC':
+        args.model = 'MC'
+        args.dataset_name = 'vimeo90k'
+        args.dataset_path = "dataset/vimeo90k/vimeo_triplet"
+        args.epochs = 30
+        args.batch_size = 10
+        args.lr = 1e-4
+        args.n_colors = 3
+        args.lamda = 0.0005
         
     else:
         print('Please Enter Appropriate Template!!!')

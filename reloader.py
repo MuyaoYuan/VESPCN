@@ -10,6 +10,7 @@ from model.ESPCN import ESPCN
 from model.ESPCN_modified import ESPCN_modified
 from model.ESPCN_multiframe import ESPCN_multiframe
 from model.ESPCN_multiframe2 import ESPCN_multiframe2
+from model.motioncompensator import MotionCompensator
 
 # import dataset
 from datasetProcess.DIV2K import DIV2K
@@ -30,6 +31,8 @@ class Reloader:
             self.model = ESPCN_multiframe(n_colors=args.n_colors, scale=args.scale, n_sequence=args.n_sequence).to(self.device)
         elif(self.model_name == 'ESPCN_multiframe2'):
             self.model = ESPCN_multiframe2(n_colors=args.n_colors, scale=args.scale, n_sequence=args.n_sequence).to(self.device)
+        elif(self.model_name == 'MC'):
+            self.model = MotionCompensator(n_colors=args.n_colors, device=self.device).to(self.device)
         else:
             print('Please Enter Appropriate Model!!!')
         # save path
@@ -139,3 +142,28 @@ class Reloader:
                         'result/' + self.model_name + '/loss/Loss_batches.png', 
                         np.load('trained_model/' + self.model_name + '/' + self.model_name +"_train_loss_arr.npy"), 
                         np.load('trained_model/' + self.model_name + '/' + self.model_name +"_valid_loss_arr.npy"))
+
+    def outputs_display_MC(self):
+        dataIter = iter(self.validDataLoader)
+        dataItem = dataIter.next()
+        frames = dataItem[0]
+        frame1 = frames[:,1]
+        frame1 = frame1.to(self.device)
+        frame2 = frames[:,0]
+        frame2 = frame2.to(self.device)
+
+        frame2_compensated, flow = self.model(frame1, frame2)
+
+        if(self.dataset_name == 'vimeo90k'):
+            frame1_im = pictureProcess(frame1)
+            frame2_im = pictureProcess(frame2)
+            frame2_compensated_im = pictureProcess(frame2_compensated)
+            if self.type == 'pre':
+                frame1_im[0].save('result/' + self.model_name + '/demo/frame1_demo.png')
+                frame2_im[0].save('result/' + self.model_name + '/demo/frame2_demo.png')
+                frame2_compensated_im[0].save('result/' + self.model_name + '/demo/frame2_compensated_demo.png')
+            elif(self.type == 'trained'):
+                frame1_im[0].save('result/' + self.model_name + '/demo/frame1.png')
+                frame2_im[0].save('result/' + self.model_name + '/demo/frame2.png')
+                frame2_compensated_im[0].save('result/' + self.model_name + '/demo/frame2_compensated.png')
+        print('psnr of demo: ' + str(calc_psnr(frame1_im[0],frame2_compensated_im[0])))
