@@ -7,16 +7,13 @@ from torch.utils.data import Dataset, DataLoader
 from torchvision.transforms.transforms import ToTensor
 
 # import model
-from model.motioncompensator import MotionCompensator
-from model.init_weight import init_weights
-
-# import loss function
-from approx_huber_loss import Approx_Huber_Loss
+from model.VESPCN import VESPCN
+# from model.init_weight import init_weights
 
 # import dataset
 from datasetProcess.vimeo90k import vimeo90k
 
-class Trainer_MC:
+class Trainer_VESPCN:
     def __init__(self, args):
         self.args = args
         if(args.task == 'preparation'):
@@ -27,8 +24,8 @@ class Trainer_MC:
         self.epochs = args.epochs
         # model select
         self.model_name = args.model
-        if(self.model_name == 'MC'):
-            self.model = MotionCompensator(n_colors=args.n_colors, device=self.device).to(self.device)
+        if(self.model_name == 'VESPCN'):
+            self.model = VESPCN(n_colors=args.n_colors, scale=args.scale, n_sequence=args.n_sequence, device=self.device).to(self.device)
         else:
             print('Please Enter Appropriate Model!!!')
 
@@ -48,11 +45,8 @@ class Trainer_MC:
         else:
             print('Please Enter Appropriate Dataset!!!')
 
-        # loss function
-        self.flow_loss = Approx_Huber_Loss(device=self.device)
-
     def train(self):
-        init_weights(self.model)
+        # init_weights(self.model)
 
         running_loss = 0.0
         valid_loss = 0.0
@@ -67,50 +61,41 @@ class Trainer_MC:
                 print('Changing Learing Rate To: ' + str(self.lr))
             for i_batch, data_batch in enumerate(self.trainDataLoader):
                 # 数据
-                frames = data_batch[0]
-                
-                frame1 = frames[:,1]
-                frame1 = frame1.to(self.device)
+                inputs = data_batch[0]
+                inputs = inputs.to(self.device)
+                labels = data_batch[1]
+                labels = labels.to(self.device)
 
-                frame2 = frames[:,0]
-                frame2 = frame2.to(self.device)
-                frame3 = frames[:,2]
-                frame3 = frame3.to(self.device)
-                
-                # 第一次梯度下降
-                frame2_compensated, flow = self.model(frame1, frame2)
+                # 一次梯度下降
                 self.optimizer.zero_grad()
-                loss = self.criterion(frame2_compensated, frame1) + self.args.lamda * self.flow_loss(flow)
+                outputs, loss_mc_mse, loss_mc_huber = self.model(inputs)
+                loss_espcn = self.criterion(outputs, labels)
+                loss_mc = self.args.beta * loss_mc_mse + self.args.lamda * loss_mc_huber
+                loss = loss_espcn + loss_mc
                 loss.backward()
                 self.optimizer.step()
-                running_loss += loss.item()
-                # 第二次梯度下降
-                frame2_compensated, flow = self.model(frame1, frame3)
-                self.optimizer.zero_grad()
-                loss = self.criterion(frame2_compensated, frame1) + self.args.lamda * self.flow_loss(flow)
-                loss.backward()
-                self.optimizer.step()
-                running_loss += loss.item()
 
                 # train_loss
+                running_loss += loss.item()
                 if i_batch % 10 == 9:
                     # train_loss
                     if self.test == True:
                         print('[%d, %5d] trainLoss:%.3f' %
-                                (epoch + 1, i_batch + 1, running_loss/20))
-                    train_loss_arr = np.append(train_loss_arr,running_loss/20)
+                                (epoch + 1, i_batch + 1, running_loss/10))
+                    train_loss_arr = np.append(train_loss_arr,running_loss/10)
                     running_loss = 0.0
 
                     # valid_loss
                     validDataIter = iter(self.validDataLoader)
                     data_valid = validDataIter.next()
-                    frames_valid = data_valid[0]
-                    frame1_valid = frames_valid[:,1]
-                    frame1_valid = frame1_valid.to(self.device)
-                    frame2_valid = frames_valid[:,0]
-                    frame2_valid = frame2_valid.to(self.device)
-                    frame2_compensated_valid, flow_valid = self.model(frame1_valid, frame2_valid)
-                    loss_valid = self.criterion(frame2_compensated_valid, frame1_valid) + self.args.lamda * self.flow_loss(flow_valid)
+                    inputs_valid = data_valid[0]
+                    inputs_valid = inputs_valid.to(self.device)
+                    labels_valid = data_valid[1]
+                    labels_valid = labels_valid.to(self.device)
+                    outputs_valid, loss_mc_mse_valid, loss_mc_huber_valid = self.model(inputs_valid)
+                    loss_espcn_valid = self.criterion(outputs_valid, labels_valid)
+                    loss_mc_valid = self.args.beta * loss_mc_mse_valid + self.args.lamda * loss_mc_huber_valid
+                    loss_valid = loss_espcn_valid + loss_mc_valid
                     valid_loss += loss_valid.item()
                     if self.test == True:
                         print('[%d, %5d] validLoss:%.3f' %
@@ -134,8 +119,3 @@ class Trainer_MC:
             torch.save(self.model.state_dict(), 'trained_model/' + self.model_name + '/' + self.model_name + '.pkl')
             np.save('trained_model/' + self.model_name + '/' + self.model_name +"_train_loss_arr.npy",train_loss_arr)
             np.save('trained_model/' + self.model_name + '/' + self.model_name + "_valid_loss_arr.npy",valid_loss_arr)
-        
-
-            
-
-

@@ -11,6 +11,7 @@ from model.ESPCN_modified import ESPCN_modified
 from model.ESPCN_multiframe import ESPCN_multiframe
 from model.ESPCN_multiframe2 import ESPCN_multiframe2
 from model.motioncompensator import MotionCompensator
+from model.VESPCN import VESPCN
 
 # import dataset
 from datasetProcess.DIV2K import DIV2K
@@ -33,6 +34,8 @@ class Reloader:
             self.model = ESPCN_multiframe2(n_colors=args.n_colors, scale=args.scale, n_sequence=args.n_sequence).to(self.device)
         elif(self.model_name == 'MC'):
             self.model = MotionCompensator(n_colors=args.n_colors, device=self.device).to(self.device)
+        elif(self.model_name == 'VESPCN'):
+            self.model = VESPCN(n_colors=args.n_colors, scale=args.scale, n_sequence=args.n_sequence, device=self.device).to(self.device)
         else:
             print('Please Enter Appropriate Model!!!')
         # save path
@@ -167,3 +170,30 @@ class Reloader:
                 frame2_im[0].save('result/' + self.model_name + '/demo/frame2.png')
                 frame2_compensated_im[0].save('result/' + self.model_name + '/demo/frame2_compensated.png')
         print('psnr of demo: ' + str(calc_psnr(frame1_im[0],frame2_compensated_im[0])))
+    
+    def outputs_display_VESPCN(self):
+        dataIter = iter(self.validDataLoader)
+        dataItem = dataIter.next()
+        inputs = dataItem[0]
+        inputs = inputs.to(self.device)
+        labels = dataItem[1]
+        labels = labels.to(self.device)
+        outputs, _, _ = self.model(inputs)
+        if(self.dataset_name == 'vimeo90k'):
+            inputs_im = framesProcess(inputs)
+            labels_im = pictureProcess(labels)
+            outputs_im = pictureProcess(outputs)
+            if self.type == 'pre':
+                inputs_im[0][0].save('result/' + self.model_name + '/demo/input_0_demo.png')
+                inputs_im[0][1].save('result/' + self.model_name + '/demo/input_1_demo.png')
+                inputs_im[0][2].save('result/' + self.model_name + '/demo/input_2_demo.png')
+                labels_im[0].save('result/' + self.model_name + '/demo/label_demo.png')
+                outputs_im[0].save('result/' + self.model_name + '/demo/output_demo.png')
+            elif(self.type == 'trained'):
+                inputs_im[0][0].save('result/' + self.model_name + '/demo/input_0.png')
+                inputs_im[0][1].save('result/' + self.model_name + '/demo/input_1.png')
+                inputs_im[0][2].save('result/' + self.model_name + '/demo/input_2.png')
+                labels_im[0].save('result/' + self.model_name + '/demo/label.png')
+                outputs_im[0].save('result/' + self.model_name + '/demo/output.png')
+        print('psnr of demo: ' + str(calc_psnr(labels_im[0],outputs_im[0])))
+    

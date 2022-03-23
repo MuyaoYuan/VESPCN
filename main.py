@@ -1,6 +1,7 @@
 import torch
 from trainer import Trainer
 from trainer_mc import Trainer_MC
+from trainer_vespcn import Trainer_VESPCN
 from reloader import Reloader
 from implementor import Implementor
 from option import args
@@ -10,37 +11,45 @@ os.environ["CUDA_VISIBLE_DEVICES"] = "1"
 
 if args.task == 'preparation':
     print("Selected task: preparation")
-    if(args.model != 'MC'):
+    if(args.model != 'MC' and args.model != 'VESPCN'):
         trainer = Trainer(args=args)
-    else:
+    elif(args.model == 'MC'):
         trainer = Trainer_MC(args=args)
+    elif(args.model == 'VESPCN'):
+        trainer = Trainer_VESPCN(args=args)
     trainer.train()
 
 elif args.task == 'train':
     print("Selected task: train")
-    if(args.model != 'MC'):
+    if(args.model != 'MC' and args.model != 'VESPCN'):
         trainer = Trainer(args=args)
-    else:
+    elif(args.model == 'MC'):
         trainer = Trainer_MC(args=args)
+    elif(args.model == 'VESPCN'):
+        trainer = Trainer_VESPCN(args=args)
     trainer.train()
 
 elif args.task == 'reload-pre':
     print("Selected task: reload-pre")
     reloader = Reloader(args, 'pre')
-    if(args.model != 'MC'):
+    if(args.model != 'MC' and args.model != 'VESPCN'):
         reloader.outputs_display()
-    else:
+    elif(args.model == 'MC'):
         reloader.outputs_display_MC()
+    elif(args.model == 'VESPCN'):
+        reloader.outputs_display_VESPCN()
     reloader.loss_display()
         
 
 elif args.task == 'reload-trained':
     print("Selected task: reload-trained")
-    reloader = Reloader(args, 'trained')
-    if(args.model != 'MC'):
+    reloader = Reloader(args, 'pre')
+    if(args.model != 'MC' and args.model != 'VESPCN'):
         reloader.outputs_display()
-    else:
+    elif(args.model == 'MC'):
         reloader.outputs_display_MC()
+    elif(args.model == 'VESPCN'):
+        reloader.outputs_display_VESPCN()
     reloader.loss_display()
 
 elif args.task == 'implement-img':

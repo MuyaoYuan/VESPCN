@@ -36,6 +36,11 @@ def model_summary(model_name):
         frame2 = torch.ones_like(frame1).to(device)
         frame_out = net(frame1,frame2)
         print(frame_out[0].shape, frame_out[1].shape)
+    # elif(model_name == 'VESPCN'):
+    #     from VESPCN import VESPCN
+    #     net = VESPCN(n_colors=3, scale=2, n_sequence=3, device=device)
+    #     net.to(device)
+    #     print(summary(net, (3, 3, 240, 360),device='cuda'))
     else:
         pass
 
@@ -45,3 +50,4 @@ if __name__ =="__main__":
     # model_summary("ESPCN_multiframe")
     # model_summary("ESPCN_multiframe2")
     model_summary("motioncompensator")
+    # model_summary("VESPCN")
