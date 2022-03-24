@@ -43,7 +43,7 @@ elif args.task == 'reload-pre':
 
 elif args.task == 'reload-trained':
     print("Selected task: reload-trained")
-    reloader = Reloader(args, 'pre')
+    reloader = Reloader(args, 'trained')
     if(args.model != 'MC' and args.model != 'VESPCN'):
         reloader.outputs_display()
     elif(args.model == 'MC'):
