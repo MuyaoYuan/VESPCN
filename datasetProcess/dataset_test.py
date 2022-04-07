@@ -22,7 +22,12 @@ def dataset_test(dataset_name):
         from vimeo90k import vimeo90k
         path = "dataset/vimeo90k/vimeo_triplet"
         batch_size = 10
-        myDataset = vimeo90k(path = path, train=True)
+        transform_list = [
+            transforms.RandomHorizontalFlip(p=0.5),
+            transforms.ToTensor()
+        ]
+        transform_compose = transforms.Compose(transform_list)
+        myDataset = vimeo90k(path = path, train=True, transform=transform_compose)
         myDataLoader = DataLoader(myDataset, batch_size=batch_size, shuffle=True)
 
         dataIter = iter(myDataLoader)
