@@ -6,6 +6,7 @@ def set_template(args):
         args.train_path_label = "dataset/DIV2K_train_HR"
         args.valid_path_in = "dataset/DIV2K_valid_LR_bicubic_X2"
         args.valid_path_label = "dataset/DIV2K_valid_HR"
+        args.transform = 'withoutNormalization'
         args.epochs = 50
         args.batch_size = 1
         args.lr = 1e-4
@@ -19,6 +20,7 @@ def set_template(args):
         args.train_path_label = "dataset/DIV2K_train_HR"
         args.valid_path_in = "dataset/DIV2K_valid_LR_bicubic_X2"
         args.valid_path_label = "dataset/DIV2K_valid_HR"
+        args.transform = 'null'
         args.epochs = 100
         args.batch_size = 1
         args.lr = 1e-4
@@ -29,6 +31,7 @@ def set_template(args):
         args.model = 'ESPCN_multiframe'
         args.dataset_name = 'vimeo90k'
         args.dataset_path = "dataset/vimeo90k/vimeo_triplet"
+        args.transform = 'null'
         args.epochs = 30
         args.batch_size = 10
         args.lr = 1e-4
@@ -40,6 +43,7 @@ def set_template(args):
         args.model = 'ESPCN_multiframe2'
         args.dataset_name = 'vimeo90k'
         args.dataset_path = "dataset/vimeo90k/vimeo_triplet"
+        args.transform = 'null'
         args.epochs = 30
         args.batch_size = 10
         args.lr = 1e-4
@@ -51,6 +55,7 @@ def set_template(args):
         args.model = 'MC'
         args.dataset_name = 'vimeo90k'
         args.dataset_path = "dataset/vimeo90k/vimeo_triplet"
+        args.transform = 'null'
         args.epochs = 30
         args.batch_size = 10
         args.lr = 1e-4
@@ -61,6 +66,7 @@ def set_template(args):
         args.model = 'VESPCN'
         args.dataset_name = 'vimeo90k'
         args.dataset_path = "dataset/vimeo90k/vimeo_triplet"
+        args.transform = 'null'
         args.epochs = 30
         args.batch_size = 10
         args.lr = 1e-4

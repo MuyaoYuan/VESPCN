@@ -16,6 +16,7 @@ from model.VESPCN import VESPCN
 # import dataset
 from datasetProcess.DIV2K import DIV2K
 from datasetProcess.vimeo90k import vimeo90k
+from datasetProcess.SRtransforms import ToTensorWithoutNormalization
 
 class Reloader:
     def __init__(self, args, type):
@@ -60,6 +61,16 @@ class Reloader:
         # model reload
         # print(self.save_path)
         self.model.load_state_dict(torch.load(self.save_path))
+        # transform select
+        if(args.transform == 'null'):
+            self.transform = ToTensor()
+            self.Normalization = True
+        elif(args.transform == 'withoutNormalization'):
+            self.transform = ToTensorWithoutNormalization()
+            self.Normalization = False
+
+        else:
+            print('Please Enter Appropriate Transform!!!')
         # Dateset select
         self.dataset_name = args.dataset_name
         if(args.dataset_name == 'DIV2K'):
@@ -68,16 +79,16 @@ class Reloader:
             self.valid_path_in = args.valid_path_in
             self.valid_path_label = args.valid_path_label
             self.batch_size = args.batch_size 
-            self.trainDataset = DIV2K(dir_input=self.train_path_in,dir_label=self.train_path_label,transform=ToTensor())
+            self.trainDataset = DIV2K(dir_input=self.train_path_in,dir_label=self.train_path_label,transform=self.transform)
             self.trainDataLoader = DataLoader(self.trainDataset, batch_size=self.batch_size, shuffle=True)
-            self.validDataset = DIV2K(dir_input=self.valid_path_in,dir_label=self.valid_path_label,transform=ToTensor())
+            self.validDataset = DIV2K(dir_input=self.valid_path_in,dir_label=self.valid_path_label,transform=self.transform)
             self.validDataLoader = DataLoader(self.validDataset, batch_size=self.batch_size, shuffle=True)
         elif(args.dataset_name == 'vimeo90k'):
             self.dataset_path = args.dataset_path
             self.batch_size = args.batch_size
-            self.trainDataset = vimeo90k(path = self.dataset_path)
+            self.trainDataset = vimeo90k(path = self.dataset_path, transform = self.transform)
             self.trainDataLoader = DataLoader(self.trainDataset, batch_size=self.batch_size, shuffle=True)
-            self.validDataset = vimeo90k(path = self.dataset_path, train=False)
+            self.validDataset = vimeo90k(path = self.dataset_path, train=False, transform = self.transform)
             self.validDataLoader = DataLoader(self.validDataset, batch_size=self.batch_size, shuffle=True)
         else:
             print('Please Enter Appropriate Dataset!!!')
@@ -94,9 +105,9 @@ class Reloader:
         labels = labels.to(self.device)
         outputs = self.model(inputs)
         if(self.dataset_name == 'DIV2K'):
-            inputs_im = pictureProcess(inputs)
-            labels_im = pictureProcess(labels)
-            outputs_im = pictureProcess(outputs)
+            inputs_im = pictureProcess(inputs,self.Normalization)
+            labels_im = pictureProcess(labels,self.Normalization)
+            outputs_im = pictureProcess(outputs,self.Normalization)
             if self.type == 'pre':
                 inputs_im[0].save('result/' + self.model_name + '/demo/input_demo.png')
                 labels_im[0].save('result/' + self.model_name + '/demo/label_demo.png')
@@ -106,9 +117,9 @@ class Reloader:
                 labels_im[0].save('result/' + self.model_name + '/demo/label.png')
                 outputs_im[0].save('result/' + self.model_name + '/demo/output.png')
         if(self.dataset_name == 'vimeo90k'):
-            inputs_im = framesProcess(inputs)
-            labels_im = pictureProcess(labels)
-            outputs_im = pictureProcess(outputs)
+            inputs_im = framesProcess(inputs,self.Normalization)
+            labels_im = pictureProcess(labels,self.Normalization)
+            outputs_im = pictureProcess(outputs,self.Normalization)
             if self.type == 'pre':
                 inputs_im[0][0].save('result/' + self.model_name + '/demo/input_0_demo.png')
                 inputs_im[0][1].save('result/' + self.model_name + '/demo/input_1_demo.png')

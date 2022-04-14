@@ -59,7 +59,26 @@ def dataset_test(dataset_name):
     else:
         pass
 
+def SRtransformsTest():
+    from vimeo90k import vimeo90k
+    from SRtransforms import ToTensorWithoutNormalization
+    path = "dataset/vimeo90k/vimeo_triplet"
+    batch_size = 10
+    myDataset = vimeo90k(path = path, train=True, transform=ToTensorWithoutNormalization())
+    myDataLoader = DataLoader(myDataset, batch_size=batch_size, shuffle=True)
+
+    dataIter = iter(myDataLoader)
+    dataItem = dataIter.next()
+    # print(len(myDataset))
+    print(dataItem[0].shape, dataItem[1].shape, dataItem[2], dataItem[3], dataItem[4], dataItem[5])
+    inputTensor = dataItem[0]
+    print(inputTensor.shape)
+    print(inputTensor.dtype)
+
+
 if __name__ =="__main__":
     # dataset_test('DIV2K')
     # print('\n')
-    dataset_test('vimeo90k')
+    # dataset_test('vimeo90k')
+    # print('\n')
+    SRtransformsTest()

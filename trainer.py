@@ -17,6 +17,7 @@ from model.init_weight import init_weights
 # import dataset
 from datasetProcess.DIV2K import DIV2K
 from datasetProcess.vimeo90k import vimeo90k
+from datasetProcess.SRtransforms import ToTensorWithoutNormalization
 
 class Trainer:
     def __init__(self, args):
@@ -44,6 +45,14 @@ class Trainer:
         self.optimizer = optim.Adam(self.model.parameters(), lr=args.lr)
         self.criterion = nn.MSELoss()
 
+        # transform select
+        if(args.transform == 'null'):
+            self.transform = ToTensor()
+        elif(args.transform == 'withoutNormalization'):
+            self.transform = ToTensorWithoutNormalization()
+        else:
+            print('Please Enter Appropriate Transform!!!')
+
         # Dateset select
         if(args.dataset_name == 'DIV2K'):
             self.train_path_in = args.train_path_in
@@ -51,17 +60,17 @@ class Trainer:
             self.valid_path_in = args.valid_path_in
             self.valid_path_label = args.valid_path_label
             self.batch_size = args.batch_size 
-            self.trainDataset = DIV2K(dir_input=self.train_path_in,dir_label=self.train_path_label,transform=ToTensor())
+            self.trainDataset = DIV2K(dir_input=self.train_path_in,dir_label=self.train_path_label,transform=self.transform)
             self.trainDataLoader = DataLoader(self.trainDataset, batch_size=self.batch_size, shuffle=True,num_workers=args.num_workers,pin_memory=args.pin_memory)
-            self.validDataset = DIV2K(dir_input=self.valid_path_in,dir_label=self.valid_path_label,transform=ToTensor())
+            self.validDataset = DIV2K(dir_input=self.valid_path_in,dir_label=self.valid_path_label,transform=self.transform)
             self.validDataLoader = DataLoader(self.validDataset, batch_size=self.batch_size, shuffle=True,num_workers=args.num_workers,pin_memory=args.pin_memory)
         elif(args.dataset_name == 'vimeo90k'):
             self.dataset_path = args.dataset_path
             self.batch_size = args.batch_size
             # print(args.num_workers,args.pin_memory)
-            self.trainDataset = vimeo90k(path = self.dataset_path)
+            self.trainDataset = vimeo90k(path = self.dataset_path, transform=self.transform)
             self.trainDataLoader = DataLoader(self.trainDataset, batch_size=self.batch_size, shuffle=True,num_workers=args.num_workers,pin_memory=args.pin_memory)
-            self.validDataset = vimeo90k(path = self.dataset_path, train=False)
+            self.validDataset = vimeo90k(path = self.dataset_path, train=False, transform=self.transform)
             self.validDataLoader = DataLoader(self.validDataset, batch_size=self.batch_size, shuffle=True,num_workers=args.num_workers,pin_memory=args.pin_memory)
         else:
             print('Please Enter Appropriate Dataset!!!')

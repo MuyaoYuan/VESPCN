@@ -37,22 +37,28 @@ def lossShow2(title, xlabel, ylabel, color1, color2, curve_label1, curve_label2,
     plt.title(title)
     plt.savefig(savepath)
 
-def pictureProcess(picture_tensor):
+def pictureProcess(picture_tensor, Normalization=True):
     picture_array = picture_tensor.cpu().detach().numpy()
     picture_array = picture_array.transpose((0,2,3,1))
     im_list = []
     for picture_item in picture_array:
-        im_list.append(Image.fromarray(np.uint8(picture_item*255)))
+        if Normalization:
+            im_list.append(Image.fromarray(np.uint8(picture_item*255)))
+        else:
+            im_list.append(Image.fromarray(np.uint8(picture_item)))
     return im_list
 
-def framesProcess(frames_tensor):
+def framesProcess(frames_tensor, Normalization=True):
     frames_array = frames_tensor.cpu().detach().numpy()
     frames_array = frames_array.transpose((0,1,3,4,2))
     frames_list = []
     for frames_item in frames_array:
         frames = []
         for frame in frames_item:
-            frames.append(Image.fromarray(np.uint8(frame*255)))
+            if Normalization:
+                frames.append(Image.fromarray(np.uint8(frame*255)))
+            else:
+                frames.append(Image.fromarray(np.uint8(frame)))
         frames_list.append(frames)
     return frames_list
 
