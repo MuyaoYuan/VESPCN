@@ -23,5 +23,5 @@ class ESPCN(nn.Module):
         x = self.relu(self.conv3(x))
         x = self.pixel_shuffle(x)
         x = self.conv4(x)
-        x = self.sigmoid(x)
+        # x = self.sigmoid(x)
         return x

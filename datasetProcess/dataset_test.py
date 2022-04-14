@@ -70,10 +70,11 @@ def SRtransformsTest():
     dataIter = iter(myDataLoader)
     dataItem = dataIter.next()
     # print(len(myDataset))
-    print(dataItem[0].shape, dataItem[1].shape, dataItem[2], dataItem[3], dataItem[4], dataItem[5])
+    # print(dataItem[0].shape, dataItem[1].shape, dataItem[2], dataItem[3], dataItem[4], dataItem[5])
     inputTensor = dataItem[0]
-    print(inputTensor.shape)
-    print(inputTensor.dtype)
+    print(inputTensor)
+    # print(inputTensor.shape)
+    # print(inputTensor.dtype)
 
 
 if __name__ =="__main__":

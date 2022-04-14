@@ -28,5 +28,5 @@ class ESPCN_modified(nn.Module):
         x = self.pixel_shuffle(x)
         #x = self.tanh(x)
         x = self.conv4(x)
-        x = self.sigmoid(x)
+        # x = self.sigmoid(x)
         return x
