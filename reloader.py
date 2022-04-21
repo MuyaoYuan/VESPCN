@@ -16,7 +16,7 @@ from model.VESPCN import VESPCN
 # import dataset
 from datasetProcess.DIV2K import DIV2K
 from datasetProcess.vimeo90k import vimeo90k
-from datasetProcess.SRtransforms import ToTensorWithoutNormalization
+from datasetProcess.SRtransforms import *
 
 class Reloader:
     def __init__(self, args, type):
@@ -67,6 +67,9 @@ class Reloader:
             self.Normalization = True
         elif(args.transform == 'withoutNormalization'):
             self.transform = ToTensorWithoutNormalization()
+            self.Normalization = False
+        elif(args.transform == 'withTranspose'):
+            self.transform = ToTensorWithTranspose()
             self.Normalization = False
 
         else:

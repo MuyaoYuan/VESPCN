@@ -17,7 +17,7 @@ from model.init_weight import init_weights
 # import dataset
 from datasetProcess.DIV2K import DIV2K
 from datasetProcess.vimeo90k import vimeo90k
-from datasetProcess.SRtransforms import ToTensorWithoutNormalization
+from datasetProcess.SRtransforms import *
 
 class Trainer:
     def __init__(self, args):
@@ -50,6 +50,8 @@ class Trainer:
             self.transform = ToTensor()
         elif(args.transform == 'withoutNormalization'):
             self.transform = ToTensorWithoutNormalization()
+        elif(args.transform == 'withTranspose'):
+            self.transform = ToTensorWithTranspose()
         else:
             print('Please Enter Appropriate Transform!!!')
 

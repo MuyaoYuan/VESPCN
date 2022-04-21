@@ -6,7 +6,7 @@ def set_template(args):
         args.train_path_label = "dataset/DIV2K_train_HR"
         args.valid_path_in = "dataset/DIV2K_valid_LR_bicubic_X2"
         args.valid_path_label = "dataset/DIV2K_valid_HR"
-        args.transform = 'withoutNormalization'
+        args.transform = 'withTranspose'
         args.epochs = 50
         args.batch_size = 1
         args.lr = 1e-4
