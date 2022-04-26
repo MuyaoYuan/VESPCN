@@ -12,6 +12,7 @@ from model.ESPCN_multiframe import ESPCN_multiframe
 from model.ESPCN_multiframe2 import ESPCN_multiframe2
 from model.motioncompensator import MotionCompensator
 from model.VESPCN import VESPCN
+from model.SRCNN import SRCNN
 
 # import dataset
 from datasetProcess.DIV2K import DIV2K
@@ -37,6 +38,8 @@ class Reloader:
             self.model = MotionCompensator(n_colors=args.n_colors, device=self.device).to(self.device)
         elif(self.model_name == 'VESPCN'):
             self.model = VESPCN(n_colors=args.n_colors, scale=args.scale, n_sequence=args.n_sequence, device=self.device).to(self.device)
+        elif(self.model_name == 'SRCNN'):
+            self.model = SRCNN(n_colors=args.n_colors).to(self.device)
         else:
             print('Please Enter Appropriate Model!!!')
         # save path

@@ -76,6 +76,20 @@ def set_template(args):
         # 损失函数权重
         args.lamda = 0.0005
         args.beta = 0.005
+
+    elif args.template == 'SRCNN':
+        args.model = 'SRCNN'
+        args.dataset_name = 'DIV2K'
+        args.train_path_in = "dataset/DIV2K_train_HR_bicubic"
+        args.train_path_label = "dataset/DIV2K_train_HR"
+        args.valid_path_in = "dataset/DIV2K_valid_HR_bicubic"
+        args.valid_path_label = "dataset/DIV2K_valid_HR"
+        args.transform = 'withTranspose'
+        args.epochs = 50
+        args.batch_size = 1
+        args.lr = 1e-4
+        args.n_colors = 3
+        args.scale = 2
         
     else:
         print('Please Enter Appropriate Template!!!')

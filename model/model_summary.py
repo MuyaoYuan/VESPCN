@@ -41,6 +41,11 @@ def model_summary(model_name):
     #     net = VESPCN(n_colors=3, scale=2, n_sequence=3, device=device)
     #     net.to(device)
     #     print(summary(net, (3, 3, 240, 360),device='cuda'))
+    elif(model_name == 'SRCNN'):
+        from SRCNN import SRCNN
+        net = SRCNN(3)
+        net.to(device)
+        print(summary(net, (3, 240, 360), device='cuda'))
     else:
         pass
 
@@ -49,5 +54,6 @@ if __name__ =="__main__":
     # model_summary("ESPCN_modified")
     # model_summary("ESPCN_multiframe")
     # model_summary("ESPCN_multiframe2")
-    model_summary("motioncompensator")
+    # model_summary("motioncompensator")
     # model_summary("VESPCN")
+    model_summary("SRCNN")
