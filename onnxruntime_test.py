@@ -3,14 +3,15 @@ import onnxruntime
 from PIL import Image
 from datasetProcess.SRtransforms import *
 
-img_path = '003.jpg'
+img_path = '004.jpg'
 img = Image.open(img_path)
 input_tensor = ToTensorWithTranspose()(img)
 input_tensor = input_tensor.view(1, *input_tensor.size())
 input_np = input_tensor.detach().cpu().numpy()
 print(input_np.shape)
 
-onnxpath = 'ESPCN_ONNX.onnx'
+# onnxpath = 'ESPCN_ONNX.onnx'
+onnxpath = 'SRCNN_ONNX.onnx'
 onnx_model = onnx.load(onnxpath)
 check = onnx.checker.check_model(onnx_model)
 print('check: ', check)

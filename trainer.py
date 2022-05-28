@@ -90,10 +90,11 @@ class Trainer:
 
         for epoch in range(self.epochs):
             print(epoch)
-            if(epoch %10 == 9 and self.lr - 1e-6 > 1e-6): 
-                self.lr = self.lr/10
-                self.optimizer = optim.Adam(self.model.parameters(), lr=self.lr)
-                print('Changing Learing Rate To: ' + str(self.lr))
+            # # 调整学习率
+            # if(epoch %10 == 9 and self.lr - 1e-6 > 1e-6): 
+            #     self.lr = self.lr/10
+            #     self.optimizer = optim.Adam(self.model.parameters(), lr=self.lr)
+            #     print('Changing Learing Rate To: ' + str(self.lr))
             for i_batch, data_batch in enumerate(self.trainDataLoader):
                 # 数据
                 inputs = data_batch[0]

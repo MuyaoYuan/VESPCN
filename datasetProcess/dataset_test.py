@@ -9,7 +9,7 @@ def dataset_test(dataset_name):
         from DIV2K import DIV2K
         path_in = "dataset/DIV2K_train_LR_bicubic_X2"
         path_label = "dataset/DIV2K_train_HR"
-        batch_size = 1
+        batch_size = 10
         myDataset = DIV2K(dir_input=path_in,dir_label=path_label,transform=ToTensor())
         myDataLoader = DataLoader(myDataset, batch_size=batch_size, shuffle=True)
         dataIter = iter(myDataLoader)
@@ -17,6 +17,11 @@ def dataset_test(dataset_name):
 
         # print(img_in.shape, img_label.shape, title_in, title_label)
         print(dataItem[0].shape, dataItem[1].shape, dataItem[2], dataItem[3])
+        input = pictureProcess(dataItem[0])
+        label = pictureProcess(dataItem[1])
+        input[0].save('test/input_cropped.png')
+        label[0].save('test/label_cropped.png')
+
 
     elif(dataset_name == 'vimeo90k'):
         from vimeo90k import vimeo90k
@@ -78,8 +83,8 @@ def SRtransformsTest():
 
 
 if __name__ =="__main__":
-    # dataset_test('DIV2K')
+    dataset_test('DIV2K')
     # print('\n')
     # dataset_test('vimeo90k')
     # print('\n')
-    SRtransformsTest()
+    # SRtransformsTest()

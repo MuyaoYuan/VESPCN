@@ -1,15 +1,21 @@
-ONNXPATH = 'ESPCN_ONNX.onnx'
-TFPATH = 'tf_model/'
+import torch
+from model.ESPCN import ESPCN
+from model.SRCNN import SRCNN
+
+# ONNXPATH = 'ESPCN_ONNX.onnx'
+ONNXPATH = 'SRCNN_ONNX.onnx'
+# TFPATH = 'tf_model/'
+
 def convertor_pytorch2onnx():
-    import torch
-    from model.ESPCN import ESPCN
+    
     device = 'cuda'
-    pytorch_model = ESPCN(n_colors=3, scale=2)
-    pytorch_model.load_state_dict(torch.load('trained_model/ESPCN/ESPCN.pkl'))
+    # pytorch_model = ESPCN(n_colors=3, scale=2)
+    # pytorch_model.load_state_dict(torch.load('trained_model/ESPCN/ESPCN.pkl'))
+    pytorch_model = SRCNN(n_colors=3)
+    pytorch_model.load_state_dict(torch.load('trained_model/SRCNN/SRCNN.pkl'))
     pytorch_model.to(device)
     pytorch_model.eval()
     dummy_input = torch.zeros([1,3,640,480]).to(device)
-    # torch.onnx.export(pytorch_model, dummy_input, 'ESPCN_ONNX.onnx', export_params=True, verbose=True)
     torch.onnx.export(pytorch_model, dummy_input, ONNXPATH, export_params=True, verbose=True, input_names=['input'], output_names=['output'])
 
 # def convertor_onnx2tf():

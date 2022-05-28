@@ -145,8 +145,9 @@ class Reloader:
             lossShow("learning curve", "batches", "loss value", "b", "train_loss", 
                     'result/' + self.model_name + '/loss/trainLoss_batches_demo.png', 
                     np.load('trained_model/' + self.model_name + '/' + self.model_name +"_train_loss_arr_demo.npy"))
-            # lossShow_epoch("learning curve", "epoch", "loss value", "b", "train_loss", 
-            #             "result/loss/trainLoss_epoch.png", np.load("trained_model/ESPCN_multiframe/train_loss_arr.npy"))
+            lossShow_epoch("learning curve", "epoches", "loss value", "b", "train_loss", 
+                        'result/' + self.model_name + '/loss/trainLoss_epoches_demo.png',
+                        np.load('trained_model/' + self.model_name + '/' + self.model_name +"_train_loss_arr_demo.npy"))
             lossShow2("learning curve", "batches", "loss value", "b", "y", "train_loss", "valid_loss",
                         'result/' + self.model_name + '/loss/Loss_batches_demo.png', 
                         np.load('trained_model/' + self.model_name + '/' + self.model_name +"_train_loss_arr_demo.npy"), 
@@ -156,8 +157,9 @@ class Reloader:
             lossShow("learning curve", "batches", "loss value", "b", "train_loss", 
                     'result/' + self.model_name + '/loss/trainLoss_batches.png', 
                     np.load('trained_model/' + self.model_name + '/' + self.model_name +"_train_loss_arr.npy"))
-            # lossShow_epoch("learning curve", "epoch", "loss value", "b", "train_loss", 
-            #             "result/loss/trainLoss_epoch.png", np.load("trained_model/ESPCN_multiframe/train_loss_arr.npy"))
+            lossShow_epoch("learning curve", "epoches", "loss value", "b", "train_loss", 
+                        'result/' + self.model_name + '/loss/trainLoss_epoches.png',
+                        np.load('trained_model/' + self.model_name + '/' + self.model_name +"_train_loss_arr_demo.npy"))
             lossShow2("learning curve", "batches", "loss value", "b", "y", "train_loss", "valid_loss",
                         'result/' + self.model_name + '/loss/Loss_batches.png', 
                         np.load('trained_model/' + self.model_name + '/' + self.model_name +"_train_loss_arr.npy"), 

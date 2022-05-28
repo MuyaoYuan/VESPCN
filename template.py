@@ -90,6 +90,21 @@ def set_template(args):
         args.lr = 1e-4
         args.n_colors = 3
         args.scale = 2
+
+    if args.template == 'ESPCN-new':
+        args.model = 'ESPCN'
+        args.dataset_name = 'DIV2K'
+        args.train_path_in = "dataset/DIV2K_train_LR_bicubic_X2"
+        args.train_path_label = "dataset/DIV2K_train_HR"
+        args.valid_path_in = "dataset/DIV2K_valid_LR_bicubic_X2"
+        args.valid_path_label = "dataset/DIV2K_valid_HR"
+        args.transform = 'null'
+        args.epochs = 200
+        args.batch_size = 20
+        args.lr = 1e-4
+        args.n_colors = 3
+        args.scale = 2
         
     else:
         print('Please Enter Appropriate Template!!!')
+    

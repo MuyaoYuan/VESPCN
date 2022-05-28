@@ -4,9 +4,11 @@ import torch
 from torchvision import transforms
 from torch.utils.data import Dataset, DataLoader
 from torchvision.transforms.transforms import ToTensor
+# from SRtransforms import Random_crop, Random_flip, Random_rotate
+from datasetProcess.SRtransforms import Random_crop, Random_flip, Random_rotate
 
 class DIV2K(Dataset):
-    def __init__(self, dir_input, dir_label, transform=ToTensor()):
+    def __init__(self, dir_input, dir_label, transform=ToTensor(), data_enhancement=True):
         self.dir_input = dir_input
         self.dir_label = dir_label
 
@@ -19,6 +21,7 @@ class DIV2K(Dataset):
         self.file_list_label = file_list_label
 
         self.transform = transform
+        self.data_enhancement = data_enhancement
 
     def __len__(self):
         return len(self.file_list_label)
@@ -29,4 +32,8 @@ class DIV2K(Dataset):
         if self.transform:
             img_in = self.transform(img_in)
             img_label = self.transform(img_label)
+        if self.data_enhancement:
+            img_in, img_label = Random_crop()(img_in, img_label, hr_crop_size=96, scale=2)
+            img_in, img_label = Random_flip()(img_in, img_label)
+            img_in, img_label = Random_rotate()(img_in, img_label)
         return img_in, img_label, self.file_list_input[index], self.file_list_label[index]

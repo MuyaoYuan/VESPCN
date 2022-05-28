@@ -13,11 +13,11 @@ def lossShow(title, xlabel, ylabel, color, curve_label, savepath, loss_arr):
     plt.title(title)
     plt.savefig(savepath)
 
-def lossShow_epoch(title, xlabel, ylabel, color, curve_label, savepath, loss_arr, trainset = 800):
-    trainset = int(trainset/10)
-    epochs = int(len(loss_arr)/trainset)
+def lossShow_epoch(title, xlabel, ylabel, color, curve_label, savepath, loss_arr, trainset = 800, batch_size = 20):
+    divide_span = int(trainset/batch_size/10)
+    epochs = int(len(loss_arr)/divide_span)
     epochs_arr = np.arange(epochs) + 1
-    loss_arr_epoch = [loss_arr[(epoch) * trainset - 1] for epoch in epochs_arr]
+    loss_arr_epoch = [loss_arr[(epoch) * divide_span - 1] for epoch in epochs_arr]
     plt.figure()
     plt.plot(epochs_arr, loss_arr_epoch, color, label=curve_label)
     plt.legend()
