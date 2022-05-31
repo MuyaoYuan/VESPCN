@@ -64,3 +64,34 @@ class Random_rotate:
             hr_img = transforms.RandomRotation(degrees=(270,270), expand=False)(hr_img)
         
         return lr_img, hr_img
+
+
+if __name__ == '__main__':
+    from PIL import Image
+    from torchvision.transforms.transforms import ToTensor
+
+    img_in_raw = Image.open('dataset/DIV2K_train_LR_bicubic_X2/0003x2.png')
+    img_label_raw = Image.open('dataset/DIV2K_train_HR/0003.png')
+
+    
+    img_in_raw = ToTensor()(img_in_raw)
+    img_label_raw = ToTensor()(img_label_raw)
+
+    for i in range(10):   
+        img_in, img_label = Random_crop()(img_in_raw, img_label_raw, hr_crop_size=96, scale=2)
+        img_in, img_label = Random_flip()(img_in, img_label)
+        img_in, img_label = Random_rotate()(img_in, img_label)
+
+        img_in_array = img_in.cpu().detach().numpy()
+        img_in_array = img_in_array.transpose((1,2,0))
+        input = Image.fromarray(np.uint8(img_in_array*255))
+
+        img_label_array = img_label.cpu().detach().numpy()
+        img_label_array = img_label_array.transpose((1,2,0))
+        label = Image.fromarray(np.uint8(img_label_array*255))
+
+        input.save('test/{}input.png'.format(i))
+        label.save('test/{}output.png'.format(i))
+
+
+    
