@@ -99,9 +99,9 @@ def set_template(args):
         args.valid_path_in = "dataset/DIV2K_valid_LR_bicubic_X2"
         args.valid_path_label = "dataset/DIV2K_valid_HR"
         args.transform = 'null'
-        args.epochs = 200
-        args.batch_size = 20
-        args.lr = 1e-4
+        args.epochs = 500
+        args.batch_size = 10
+        args.lr = 1e-5
         args.n_colors = 3
         args.scale = 2
         
