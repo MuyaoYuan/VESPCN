@@ -25,7 +25,7 @@ class Implementor:
         else:
             print('Please Enter Appropriate Model!!!')
         # save path
-        self.save_path = 'trained_model/' + self.model_name + '/' + self.model_name + '.pkl'
+        self.save_path = 'trained_model/' + self.model_name + '/' + self.model_name + '_demo.pkl'
         # model reload
         # print(self.save_path)
         self.model.load_state_dict(torch.load(self.save_path))
@@ -39,6 +39,32 @@ class Implementor:
         img_output = self.model(img_in)
         img_SR = pictureProcess(img_output)
         img_SR[0].save(os.path.join(save_path, self.model_name + '_SR.png'))
+    
+    def img_SR_YCbCr(self, img_path, save_path):
+        img = Image.open(img_path)
+        img_width = img.width
+        img_height = img.height
+
+        hr_bicubic = img.resize((img_width * self.args.scale, img_height * self.args.scale), resample=Image.BICUBIC)
+        hr_bicubic_YCbCr = self.transform(hr_bicubic.convert('YCbCr'))
+
+        img_YCbCr = img.convert('YCbCr')
+        img_in_YCbCr = self.transform(img_YCbCr)
+        img_in_Y = img_in_YCbCr[0]
+        img_in_Y = img_in_Y.to(self.device)
+        img_in_Y = img_in_Y.view(1, 1, *img_in_Y.size())
+
+        img_output_Y = self.model(img_in_Y)
+        
+        img_output_Y = torch.squeeze(img_output_Y)
+        img_output_Y = img_output_Y.cpu()
+        img_output_YCbCr = torch.stack([img_output_Y, hr_bicubic_YCbCr[1], hr_bicubic_YCbCr[2]])
+        img_output_YCbCr = img_output_YCbCr.detach().numpy()
+        img_output_YCbCr = np.uint8(img_output_YCbCr*255).transpose((1,2,0))
+        img_SR = Image.fromarray(img_output_YCbCr, mode='YCbCr').convert('RGB')
+
+        hr_bicubic.save(os.path.join(save_path, self.model_name + '_BICUBIC.png'))
+        img_SR.save(os.path.join(save_path, self.model_name + '_SR.png'))
 
     def video_SR(self, video_path, save_path):
         cap = cv.VideoCapture(video_path)

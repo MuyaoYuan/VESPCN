@@ -33,7 +33,10 @@ elif args.task == 'reload-pre':
     print("Selected task: reload-pre")
     reloader = Reloader(args, 'pre')
     if(args.model != 'MC' and args.model != 'VESPCN'):
-        reloader.outputs_display()
+        if args.convert:
+            reloader.outputs_display_YCbCr()
+        else:
+            reloader.outputs_display()
     elif(args.model == 'MC'):
         reloader.outputs_display_MC()
     elif(args.model == 'VESPCN'):
@@ -45,7 +48,10 @@ elif args.task == 'reload-trained':
     print("Selected task: reload-trained")
     reloader = Reloader(args, 'trained')
     if(args.model != 'MC' and args.model != 'VESPCN'):
-        reloader.outputs_display()
+        if args.convert:
+            reloader.outputs_display_YCbCr()
+        else:
+            reloader.outputs_display()
     elif(args.model == 'MC'):
         reloader.outputs_display_MC()
     elif(args.model == 'VESPCN'):
@@ -55,7 +61,8 @@ elif args.task == 'reload-trained':
 elif args.task == 'implement-img':
     print("Selected task: implement-img")
     implementor = Implementor(args)
-    implementor.img_SR('test/image_original/Amber.jpg','test/image_SR')
+    # implementor.img_SR('005.jpg','test/image_SR')
+    implementor.img_SR_YCbCr('005.jpg','test/image_SR')
 
 elif args.task == 'implement-video':
     print("Selected task: implement-video")

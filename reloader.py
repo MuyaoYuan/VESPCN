@@ -215,4 +215,41 @@ class Reloader:
                 labels_im[0].save('result/' + self.model_name + '/demo/label.png')
                 outputs_im[0].save('result/' + self.model_name + '/demo/output.png')
         print('psnr of demo: ' + str(calc_psnr(labels_im[0],outputs_im[0])))
-    
+
+    def outputs_display_YCbCr(self):
+        dataIter = iter(self.validDataLoader)
+        dataItem = dataIter.next()
+        inputs = dataItem[0]
+        inputs = inputs.to(self.device)
+        labels = dataItem[1]
+        labels = labels.to(self.device)
+        outputs = self.model(inputs)
+        if(self.dataset_name == 'DIV2K'):
+            inputs_im = pictureProcess(inputs,self.Normalization, RGB=False)
+            labels_im = pictureProcess(labels,self.Normalization, RGB=False)
+            outputs_im = pictureProcess(outputs,self.Normalization, RGB=False)
+            if self.type == 'pre':
+                inputs_im[0].save('result/' + self.model_name + '/demo/input_demo.png')
+                labels_im[0].save('result/' + self.model_name + '/demo/label_demo.png')
+                outputs_im[0].save('result/' + self.model_name + '/demo/output_demo.png')
+            elif self.type == 'trained':
+                inputs_im[0].save('result/' + self.model_name + '/demo/input.png')
+                labels_im[0].save('result/' + self.model_name + '/demo/label.png')
+                outputs_im[0].save('result/' + self.model_name + '/demo/output.png')
+        if(self.dataset_name == 'vimeo90k'):
+            inputs_im = framesProcess(inputs,self.Normalization)
+            labels_im = pictureProcess(labels,self.Normalization)
+            outputs_im = pictureProcess(outputs,self.Normalization)
+            if self.type == 'pre':
+                inputs_im[0][0].save('result/' + self.model_name + '/demo/input_0_demo.png')
+                inputs_im[0][1].save('result/' + self.model_name + '/demo/input_1_demo.png')
+                inputs_im[0][2].save('result/' + self.model_name + '/demo/input_2_demo.png')
+                labels_im[0].save('result/' + self.model_name + '/demo/label_demo.png')
+                outputs_im[0].save('result/' + self.model_name + '/demo/output_demo.png')
+            elif(self.type == 'trained'):
+                inputs_im[0][0].save('result/' + self.model_name + '/demo/input_0.png')
+                inputs_im[0][1].save('result/' + self.model_name + '/demo/input_1.png')
+                inputs_im[0][2].save('result/' + self.model_name + '/demo/input_2.png')
+                labels_im[0].save('result/' + self.model_name + '/demo/label.png')
+                outputs_im[0].save('result/' + self.model_name + '/demo/output.png')
+        print('psnr of demo: ' + str(calc_psnr(labels_im[0],outputs_im[0])))

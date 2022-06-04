@@ -18,7 +18,7 @@ class ToTensorWithTranspose:
         return pic_tensor
 
 class Random_crop:
-    def __call__(self, lr_img, hr_img, hr_crop_size=96, scale=2):
+    def __call__(self, lr_img, hr_img, hr_crop_size=200, scale=2):
         lr_crop_size = hr_crop_size // scale
         # print(lr_img.shape)
         lr_img_shape = lr_img.shape[-2:]

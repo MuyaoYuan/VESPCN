@@ -1,12 +1,15 @@
 import numpy as np
 from PIL import Image
 
-def pictureProcess(picture_tensor):
+def pictureProcess(picture_tensor, RGB = True):
     picture_array = picture_tensor.cpu().detach().numpy()
     picture_array = picture_array.transpose((0,2,3,1))
     im_list = []
     for picture_item in picture_array:
-        im_list.append(Image.fromarray(np.uint8(picture_item*255)))
+        if RGB:
+            im_list.append(Image.fromarray(np.uint8(picture_item*255)))
+        else:
+            im_list.append(Image.fromarray(np.uint8(picture_item.reshape(picture_item.shape[0], picture_item.shape[1])*255)))
     return im_list
 
 def framesProcess(frames_tensor):

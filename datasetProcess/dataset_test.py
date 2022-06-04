@@ -17,8 +17,8 @@ def dataset_test(dataset_name):
 
         # print(img_in.shape, img_label.shape, title_in, title_label)
         print(dataItem[0].shape, dataItem[1].shape, dataItem[2], dataItem[3])
-        input = pictureProcess(dataItem[0])
-        label = pictureProcess(dataItem[1])
+        input = pictureProcess(dataItem[0], RGB=False)
+        label = pictureProcess(dataItem[1], RGB=False)
         input[0].save('test/input_cropped.png')
         label[0].save('test/label_cropped.png')
 

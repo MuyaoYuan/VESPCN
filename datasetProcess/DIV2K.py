@@ -8,7 +8,7 @@ from torchvision.transforms.transforms import ToTensor
 from datasetProcess.SRtransforms import Random_crop, Random_flip, Random_rotate
 
 class DIV2K(Dataset):
-    def __init__(self, dir_input, dir_label, transform=ToTensor(), data_enhancement=True):
+    def __init__(self, dir_input, dir_label, transform=ToTensor(), data_enhancement=True, convert=True):
         self.dir_input = dir_input
         self.dir_label = dir_label
 
@@ -22,6 +22,7 @@ class DIV2K(Dataset):
 
         self.transform = transform
         self.data_enhancement = data_enhancement
+        self.convert = convert
 
     def __len__(self):
         return len(self.file_list_label)
@@ -29,11 +30,21 @@ class DIV2K(Dataset):
     def __getitem__(self, index):
         img_in = Image.open(os.path.join(self.dir_input, self.file_list_input[index]))
         img_label = Image.open(os.path.join(self.dir_label, self.file_list_label[index]))
+
+        if self.convert:
+            img_in = img_in.convert('YCbCr')
+            img_label = img_label.convert('YCbCr')
         if self.transform:
             img_in = self.transform(img_in)
             img_label = self.transform(img_label)
         if self.data_enhancement:
-            img_in, img_label = Random_crop()(img_in, img_label, hr_crop_size=96, scale=2)
+            img_in, img_label = Random_crop()(img_in, img_label)
             img_in, img_label = Random_flip()(img_in, img_label)
             img_in, img_label = Random_rotate()(img_in, img_label)
+        if self.convert:
+            img_in = img_in[0]
+            img_in = img_in.view(1, *img_in.size())
+            img_label = img_label[0]
+            img_label = img_label.view(1, *img_label.size())
+            
         return img_in, img_label, self.file_list_input[index], self.file_list_label[index]
