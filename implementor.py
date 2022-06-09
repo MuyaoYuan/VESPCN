@@ -25,7 +25,7 @@ class Implementor:
         else:
             print('Please Enter Appropriate Model!!!')
         # save path
-        self.save_path = 'trained_model/' + self.model_name + '/' + self.model_name + '_demo.pkl'
+        self.save_path = 'trained_model/' + self.model_name + '/' + self.model_name + '.pkl'
         # model reload
         # print(self.save_path)
         self.model.load_state_dict(torch.load(self.save_path))

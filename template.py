@@ -116,7 +116,7 @@ def set_template(args):
         args.convert = True
         args.epochs = 500
         args.batch_size = 10
-        args.lr = 1e-5
+        args.lr = 1e-4
         args.n_colors = 1
         args.scale = 2
         

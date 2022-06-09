@@ -62,7 +62,7 @@ elif args.task == 'implement-img':
     print("Selected task: implement-img")
     implementor = Implementor(args)
     # implementor.img_SR('005.jpg','test/image_SR')
-    implementor.img_SR_YCbCr('005.jpg','test/image_SR')
+    implementor.img_SR_YCbCr('c观众端.png','test/image_SR')
 
 elif args.task == 'implement-video':
     print("Selected task: implement-video")
